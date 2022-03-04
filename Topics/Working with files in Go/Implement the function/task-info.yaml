@@ -1,0 +1,26 @@
+type: string
+custom_name: Implement the function!
+files:
+- name: answer.txt
+  visible: true
+  placeholders:
+  - offset: 0
+    length: 18
+    placeholder_text: type your solution here
+    initial_state:
+      length: 18
+      offset: 0
+    initialized_from_dependency: false
+    selected: true
+    status: Solved
+  text: type your solution here
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/16505#comment
+status: Solved
+feedback:
+  message: |-
+    <html>Directory test_directory has been successfully deleted!
+
+    You're doing great! Since test_directory is an empty directory we could use both os.Remove or os.RemoveAll.</html>
+  time: Thu, 03 Mar 2022 05:10:07 UTC
+record: -1

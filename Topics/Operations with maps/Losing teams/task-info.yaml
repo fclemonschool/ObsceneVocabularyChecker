@@ -1,0 +1,22 @@
+type: code
+files:
+- name: main.go
+  visible: true
+  text: "package main\n\nimport \"fmt\"\n\nfunc main() {\n    groupH := map[string]int{\n\
+    \        \"Chelsea\": 12,\n        \"Juventus\": 12,\n        \"Zenit\": 4,\n\
+    \        \"Malmo\": 1,\n    }\n\n    // delete the losing teams from the 'groupH'\
+    \ map here\n    delete(?, ?)\n    delete(?, ?)\n\n    // do not change the text\
+    \ in the Println statement below!\n    fmt.Println(\"The two teams that will pass\
+    \ to the knockout stage are:\") \n\n    // implement the for...range loop here\
+    \ to print the name of the qualified teams\n    for ? := range ? {\n        fmt.Println(?)\n\
+    \    }\n}"
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/17209#comment
+status: Solved
+feedback:
+  message: |-
+    <html>Well done! 🏆⚽️ Chelsea and Juventus pass to the knockout stage!
+
+    Passed. Correct</html>
+  time: Fri, 04 Mar 2022 09:34:15 UTC
+record: -1

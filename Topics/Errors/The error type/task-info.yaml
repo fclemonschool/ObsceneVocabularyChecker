@@ -1,0 +1,29 @@
+type: choice
+is_multiple_choice: true
+options:
+- text: The <code>error</code> type returns an error message as a <code>string</code>
+- text: We can only use the <code>error</code> type if we import the <code>errors</code>
+    package
+- text: The default value of <code>error</code> is <code>nil</code>
+- text: <code>error</code> is an <code>interface</code> type that belongs to the <code>builtin</code>
+    package
+- text: The default value of <code>error</code> is <code>true</code>
+message_correct: Congratulations!
+message_incorrect: Incorrect solution
+files:
+- name: main.go
+  visible: true
+  text: |+
+    // You can experiment here, it won’t be checked
+
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/16777#comment
+status: Solved
+feedback:
+  message: <html>Correct solution</html>
+  time: Thu, 03 Mar 2022 05:00:54 UTC
+record: -1
+selected_options:
+- 2
+- 3
+- 4

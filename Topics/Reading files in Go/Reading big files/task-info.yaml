@@ -1,0 +1,26 @@
+type: choice
+is_multiple_choice: true
+options:
+- text: Read the file word by word
+- text: Read the file into a string via the <code>ioutil</code> package
+- text: Read the file in chunks
+- text: Read the file line by line
+message_correct: Congratulations!
+message_incorrect: Incorrect solution
+files:
+- name: main.go
+  visible: true
+  text: |+
+    // You can experiment here, it won’t be checked
+
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/16708#comment
+status: Solved
+feedback:
+  message: <html>Correct solution</html>
+  time: Thu, 03 Mar 2022 05:33:51 UTC
+record: -1
+selected_options:
+- 1
+- 2
+- 3

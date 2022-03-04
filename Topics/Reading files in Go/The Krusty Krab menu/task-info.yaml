@@ -1,0 +1,28 @@
+type: code
+files:
+- name: main.go
+  visible: true
+  text: |-
+    package main
+
+    import (
+        "fmt"
+        "io/ioutil"
+    )
+
+    func main() {
+        file, err := ? // open the file here with the ioutil.ReadFile() function
+        if err != nil {
+            fmt.Println(err) // print the error in case there is any
+        }
+        // print the contents of the file here as a string
+    }
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/16703#comment
+status: Solved
+feedback:
+  message: "<html>Passed. \nKrabby Pattie $2.00\nKrusty Combo $3.99\nKrusty Deluxe\
+    \ $3.00\nSeaweed Salad $1.50\nCoral Bits $1.95\n\nWelcome to the Krusty Krab!\
+    \ \U0001f354\U0001f964\U0001f35f</html>"
+  time: Thu, 03 Mar 2022 05:28:04 UTC
+record: -1

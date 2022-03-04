@@ -1,0 +1,33 @@
+type: code
+files:
+- name: main.go
+  visible: true
+  text: |-
+    package main
+
+    import (
+        "fmt"
+    )
+
+    func main() {
+        // the galleyGrub map contains the Krusty Krab menu
+        galleyGrub := map[string]float64 {
+            "Krabby Pattie 🍔": 2.49,
+            "Krusty Combo 🍔🥤🍟": 3.99,
+            "Coral Bits 🍟": 1.95,
+        }
+
+        galleyGrub[?] = ? // add the Krusty Dog 🌭 at a cost of 3.99 here.
+
+        fmt.Println(galleyGrub)
+    }
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/17002#comment
+status: Solved
+feedback:
+  message: |-
+    <html>Mr. Krabs 🦀 paid you one doubloon 🪙 for updating the map, you should be grateful!
+
+    map[Coral Bits 🍟:1.95 Krabby Pattie 🍔:2.49 Krusty Combo 🍔🥤🍟:3.99 Krusty Dog 🌭:3.99]</html>
+  time: Thu, 03 Mar 2022 06:27:49 UTC
+record: -1

@@ -1,0 +1,89 @@
+<h2>Maps</h2>
+<html>
+ <head></head>
+ <body>
+  <p>Maps are a very useful tool that helps us store and access objects in an efficient way; Golang maps are an implementation of a data structure called <a target="_blank" href="https://en.wikipedia.org/wiki/Hash_table" rel="noopener noreferrer nofollow">hash table</a>.</p> 
+  <p>In this topic, we'll learn the basic use cases of maps in Go: how to declare and initialize a map, how to add items to a map, and finally some basic operations we can perform with items contained in a map.</p> 
+  <h5>What is a map?</h5> 
+  <p>In Go, maps are a convenient built-in data structure that associates elements of one type known as <strong>keys</strong> with elements of the same or another type, known as <strong>values</strong>.</p> 
+  <p>Keys and values can be of any type such as integers, floating or complex numbers, strings, pointers, etc, as long as we can compare these types using the <code class="language-go">==</code> and <code class="language-go">!=</code> operators. An example of a type that we can't use as a map key is a slice<em>; </em>in very simple terms, we can't use slices as map keys because we can't compare one slice with another using the <code class="language-go">==</code> operator.</p> 
+  <p></p>
+  <div class="alert alert-primary">
+   If you are familiar with Python, Go maps are quite similar to a dictionary. On the other hand, if you are familiar with Java or the C family of languages, Go maps are similar to hash tables.
+  </div>
+  <p></p> 
+  <p>An important detail to know when working with maps in Go is that all keys are unique; apart from that, we will only be able to add items when our map is initialized. Now let's go ahead and take a look at the most basic map declaration:</p> 
+  <pre><code class="language-go">var ranks map[string]string</code></pre> 
+  <p>In the above code, we have declared the map <code class="language-go">ranks</code> with the <code class="language-go">string</code> type key/value pairs; however, we have not initialized it yet, thus its default value will be <code class="language-go">nil</code>.</p> 
+  <h5>Initializing a map</h5> 
+  <p>As we previously mentioned, it is only possible to add items to an initialized map; if we tried to add an item to the uninitialized <code class="language-go">ranks</code> map, a run-time panic would occur:</p> 
+  <pre><code class="language-go">var ranks map[string]string
+ranks["gold"] = "🥇" // Trying to add key: "gold" and value "🥇"
+
+// Output: panic: assignment to entry in nil map</code></pre> 
+  <p>To avoid the run-time panic, we can initialize maps in various ways via the <code class="language-go">make</code> function from a Go's <code class="language-go">builtin</code> package:</p> 
+  <pre><code class="language-go">var ranks map[string]string // This only declares the 'ranks' map variable
+ranks = make(map[string]string) // Option #1 to initialize the previously declared 'ranks' map</code></pre> 
+  <p>Another way is to declare and initialize the map directly:</p> 
+  <pre><code class="language-go">var ranks = make(map[string]string) // Option #2 to declare &amp; initialize the 'ranks' map</code></pre> 
+  <p>Finally, we can also assign, declare and initialize a map using the <code class="language-go">:=</code> operator:</p> 
+  <pre><code class="language-go">ranks := make(map[string]string) // Option #3 to assign, declare &amp; initialize the 'ranks' map</code></pre> 
+  <h5>Adding items to a map</h5> 
+  <p>Now that we have properly created and initialized our first map, let's take a look at the syntax for adding new items to a map:</p> 
+  <pre><code class="language-go">ranks["gold"] = "🥇"
+ranks["silver"] = "🥈"
+ranks["bronze"] = "🥉"
+
+fmt.Println(ranks) // map[bronze:🥉 gold:🥇 silver:🥈]</code></pre> 
+  <p>Since we've previously assigned the <code class="language-go">ranks</code> map keys and values as a <code class="language-go">string</code>, we can only pass string-type items to it.</p> 
+  <p>If we know in advance the keys and values that we want our map to have, we can use a <strong>map literal</strong> to both declare and create it. A map literal starts with the map type in the form of <code class="language-go">map[KeyType]ValueType</code> followed by curly braces <code class="language-go">{}</code> containing the key/value pairs we want the map to start with. To add each key/value pair, first we write the key followed by a colon <code class="language-go">:</code>, and then the value. Multiple key/value pairs should be separated by commas <code class="language-go">,</code>. Now let's go ahead and create a new <code class="language-go">elements</code> map:</p> 
+  <pre><code class="language-go">elements := map[string]string{
+    "H": "Hydrogen",
+    "He": "Helium",
+    "Li": "Lithium",
+}
+
+fmt.Println(elements) // map[H:Hydrogen He:Helium Li:Lithium]</code></pre> 
+  <h5>Working with items on a map</h5> 
+  <p>Once we have added items to our map, we can work in different ways with its content. To retrieve a value from a key we can write the following:</p> 
+  <pre><code class="language-go">helium := elements["He"]
+fmt.Println(helium) // Helium</code></pre> 
+  <p>If we try to retrieve a value from a non-existing key, we will retrieve the default value for the type:</p> 
+  <pre><code class="language-go">sodium := elements["Na"]
+fmt.Println(sodium) // Prints an empty string - the default value of the string type</code></pre> 
+  <p>It is also important to know that we can read values from an uninitialized or a <code class="language-go">nil</code> map! If we tried to do this, we would read the default value for the type into a variable:</p> 
+  <pre><code class="language-go">var numbers map[int]int
+fmt.Println(numbers) // map[] &lt;- means that the map is uninitialized
+
+fmt.Println(numbers[2]) // 0 &lt;- no panic output, we just get the default value: 0 for integers
+
+fmt.Println(numbers == nil) // true &lt;- confirms that the map is 'nil'</code></pre> 
+  <p>We can also check if a certain key exists within a map using the following syntax:</p> 
+  <pre><code class="language-go">val, ok := map[key]</code></pre> 
+  <p>The above syntax will return a boolean value within the <code class="language-go">ok</code> variable. If the key is present, and its value is present, then the value will be returned within the <code class="language-go">val</code> variable. Let's take a look at how we can implement it when working with the <code class="language-go">elements</code> map:</p> 
+  <pre><code class="language-go">func main() {
+    ...
+    key := "He"
+    if val, ok := elements[key]; ok {
+        fmt.Println("The element", key, "is", val)
+        return
+    }
+    fmt.Println("The element", key, "is not in the map")
+
+    // Output:
+    // The element He is Helium
+}</code></pre> 
+  <p></p>
+  <div class="alert alert-primary">
+   In Go, the preferred naming convention to use for a check type variable is 
+   <code class="language-go">ok</code>. It is both a common practice used by many Go programmers and a part of the Go code style conventions.
+  </div> 
+  <p></p> 
+  <p>Finally, we can update the value of a key in our map with the following syntax:</p> 
+  <pre><code class="language-go">elements["He"] = "😈 HellBoy 😈"
+fmt.Println(elements) // map[He:😈 HellBoy 😈 Li:Lithium]</code></pre> 
+  <h5>Summary</h5> 
+  <p>In this topic, we've learned about the map data structure in Go. Maps are made up of key/value pairs and provide a way to store data without relying on indexing. This allows us to retrieve values based on their meaning and relation to other data types.</p> 
+  <p>We've also learned various ways to declare and initialize a map, how to add items to a map, as well as some basic operations we can do with items contained in a map. Now let's go ahead and test our newly acquired knowledge with some tasks on maps!</p>
+ </body>
+</html>

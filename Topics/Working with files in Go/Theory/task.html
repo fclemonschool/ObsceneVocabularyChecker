@@ -1,0 +1,125 @@
+<h2>Working with files in Go</h2>
+<html>
+ <head></head>
+ <body>
+  <p>Quite often, you'll need your program to work with data that is outside the codebase, and regularly this data will come in the form of files.</p> 
+  <p>In this topic, you'll learn the basics of working with files – how to open, close, create and delete files using Go.</p> 
+  <h5>Open file</h5> 
+  <p>To start learning how to work with files, we will begin with opening an existing one. In Go, we can import the <code class="language-go">os</code> package from the standard library to open a file in the read-only mode using the <code class="language-go">os.Open()</code> function.</p> 
+  <pre><code class="language-go">package main
+
+import (
+    "fmt"
+    "os"
+)
+
+func main() {
+    // example of opening a file in the read-only mode
+    file, err := os.Open("test_file.txt")
+    if err != nil {
+        // this logs the error into the terminal in case opening the file fails
+        fmt.Println(err)
+    }
+    // closing the file
+    file.Close()
+}</code></pre> 
+  <p>The <code class="language-go">os.Open()</code> function has one required parameter <em>—</em> <code class="language-go">name</code>, which is the complete path of the file that you want to open. In this example, the <code class="language-go">name</code> parameter has the value <code class="language-go">"test_file.txt"</code>: it supposes that <em>test_file.txt</em> is present in our current working directory.</p> 
+  <p>If opening the file fails for any reason, the program will log the error string into our terminal:</p> 
+  <pre><code class="language-go">open test_file.txt: The system cannot find the file specified.</code></pre> 
+  <p>After we are done working with files, we always need to close them! Closing the file guarantees the safety of the data and prevents the program from further accessing the file. In Go, we can close files using the <code class="language-go">Close()</code> function:</p> 
+  <pre><code class="language-go">// close the file
+file.Close()</code></pre> 
+  <h5>os.OpenFile</h5> 
+  <p>Apart from <code class="language-go">os.Open()</code>, we can also use the <code class="language-go">os.OpenFile()</code> function that lets us open files with additional options:</p> 
+  <pre><code class="language-go">// opening a file using the os.O_RDONLY flag
+file, err := os.OpenFile("test_file.txt", os.O_RDONLY, 0644)
+if err != nil {
+    fmt.Println(err)
+}</code></pre> 
+  <p>The <code class="language-go">os.OpenFile()</code> function has two additional parameters: the parameter that goes after the file name is the specified <code class="language-go">flag</code>, and the last parameter is the permission mode<strong> </strong><code class="language-go">perm</code>. The permission mode will usually be <code class="language-go">0644</code> when opening files in the read, write, or read-and-write mode, and <code class="language-go">0666</code> when creating new files. You can find more information about permission modes on <a target="_blank" href="https://chmodcommand.com/" rel="noopener noreferrer nofollow">this page</a>.</p> 
+  <p>When opening a file with<code class="language-go">os.OpenFile()</code>, you can choose one of these three flags:</p> 
+  <table align="center" border="1" cellpadding="1" cellspacing="1" style="height: 160px; text-align: center; width: 580px;"> 
+   <tbody> 
+    <tr> 
+     <td><code class="language-go">os.O_RDONLY</code></td> 
+     <td>Opens the file in the read-only mode, just like <code class="language-go">os.Open()</code> does</td> 
+    </tr> 
+    <tr> 
+     <td><code class="language-go">os.O_WRONLY</code></td> 
+     <td>Opens the file in the write-only mode</td> 
+    </tr> 
+    <tr> 
+     <td><code class="language-go">os.O_RDWR</code></td> 
+     <td>Opens the file in the read-and-write mode</td> 
+    </tr> 
+   </tbody> 
+  </table> 
+  <p>You can combine these other flags using the <code class="language-go">'|'</code> operator:</p> 
+  <table align="center" border="1" cellpadding="1" cellspacing="1" style="height: 100px; text-align: center; width: 580px;"> 
+   <tbody> 
+    <tr> 
+     <td><code class="language-go">os.O_APPEND</code></td> 
+     <td>Appends data to the end of the file</td> 
+    </tr> 
+    <tr> 
+     <td><code class="language-go">os.O_CREATE</code></td> 
+     <td>Creates the file in case it does not exist</td> 
+    </tr> 
+   </tbody> 
+  </table> 
+  <p>In the following example, we combine the <code class="language-go">os.O_WRONLY</code> and <code class="language-go">os.O_APPEND</code> flags:</p> 
+  <pre><code class="language-go">// flags os.O_WRONLY and os.O_APPEND combined:
+file, err := os.OpenFile("test_file.txt", os.O_WRONLY | os.O_APPEND, 0644)
+if err != nil {
+    fmt.Println(err)
+}</code></pre> 
+  <p>After executing this block of code, the existing <em>test_file.txt</em> will be open<em>,</em> and we will have permission to append data to the end of this file.</p> 
+  <h5>Creating a new file</h5> 
+  <p>In certain cases, we need to create a file during the execution of our program. To create a new file in Go, we can use the <code class="language-go">os.Create()</code> function: it creates a new file, or otherwise it truncates the file if we use it with the name of a file that already exists.</p> 
+  <p><code class="language-go">os.Create()</code> creates a new file with the <code class="language-go">os.O_RDWR</code> flag and the <code class="language-go">0666</code> permission: this means that after creating the file, we will have the necessary permissions to work with it in the read-and-write mode.</p> 
+  <pre><code class="language-go">// this creates a new file, or truncates the already existing file
+file, err := os.Create("new_file.txt")
+if err != nil {
+    fmt.Println(err)
+}</code></pre> 
+  <p></p>
+  <div class="alert alert-warning">
+   Remember that if you already have a file with some data and use 
+   <code class="language-go">os.Create()</code> with the same name, the file data will be truncated! Be careful when using 
+   <code class="language-go">os.Create()</code> and working with files that contain valuable data.
+  </div>
+  <p></p> 
+  <p>Another way to create a new file in Go is to use the <code class="language-go">os.OpenFile()</code> function that we explored earlier. In this case, we need to specify the <code class="language-go">os.O_CREATE</code> flag and the <code class="language-go">0666</code> permission.</p> 
+  <pre><code class="language-go">// this creates a new file using the os.O_CREATE flag and the 0666 permission
+file, err := os.OpenFile("new_file.txt", os.O_CREATE, 0666)
+if err != nil {
+    fmt.Println(err)
+}</code></pre> 
+  <p>Using <code class="language-go">os.OpenFile()</code> with the <code class="language-go">os.O_CREATE</code> flag will not truncate the file if it already exists, as opposed to <code class="language-go">os.Create()</code>. In this case, nothing will happen to the existing file and the information will not be truncated.</p> 
+  <h5>Deleting a file</h5> 
+  <p>If we need to delete a file during the execution of our program, we can use the <code class="language-go">os.Remove()</code> function.</p> 
+  <p>The <code class="language-go">os.Remove()</code> function accepts one argument <em>— </em><code class="language-go">name</code>, which is the path to the file name or empty directory. We can also adjust this argument to point to a specific location using the proper path syntax of our operating system.</p> 
+  <pre><code class="language-go">// this deletes "new_file.txt" from our current working directory
+err := os.Remove("new_file.txt")
+if err != nil {
+    fmt.Println(err)
+}</code></pre> 
+  <p>If the file we're trying to delete doesn't exist, we will get the following error:</p> 
+  <pre><code class="language-go">remove new_file.txt: The system cannot find the file specified.</code></pre> 
+  <p>If we try to delete a directory but the directory isn't empty, we will get the following error:</p> 
+  <pre><code class="language-go">remove test_directory: The directory is not empty.</code></pre> 
+  <p>Occasionally, it might be useful to delete more than one file. For this, we can use the <code class="language-go">os.RemoveAll()</code> function.</p> 
+  <p>The <code class="language-go">os.RemoveAll()</code> function accepts one argument <em>—</em> <code class="language-go">path</code>. It will delete everything inside the specified path (files and folders).</p> 
+  <pre><code class="language-go">// this deletes "test_directory" and all of its contents
+err := os.RemoveAll("test_directory")
+if err != nil {
+    fmt.Println(err)
+}</code></pre> 
+  <h5>Summary</h5> 
+  <p>In this topic, you've learned the basics of working with files in Go: how to open and close files, how to create new ones and delete existing files.</p> 
+  <p>When opening a file, <code class="language-go">os.Open()</code> will always open the file in the read-only mode. If we want to open the file in the write-only or the read-and-write mode, we will have to use <code class="language-go">os.OpenFile()</code> with the proper flags, according to our needs.</p> 
+  <p>Remember to always close files using the <code class="language-go">Close()</code> function as soon as you are done working with them! This way you can protect files with valuable data.</p> 
+  <p>When creating a new file, we can use <code class="language-go">os.Create()</code> that will create a new file or truncate the file if it already exists. We can also use <code class="language-go">os.OpenFile()</code> with the <code class="language-go">os.O_CREATE</code> flag and the <code class="language-go">0666</code> permission to create a new file, without the risk of truncating an already existing file.</p> 
+  <p>Last but not least: we can use <code class="language-go">os.Remove()</code> to delete a single file or an empty directory, and <code class="language-go">os.RemoveAll()</code> in case we need to delete multiple files or directories.</p>
+ </body>
+</html>

@@ -1,0 +1,91 @@
+<h2>Errors</h2>
+<html>
+ <head></head>
+ <body>
+  <p>Often when developing a program, we face unwanted situations such as abnormal user inputs, a failed database connection, or an attempt to access a file that doesn't exist; these situations are known as <strong>errors</strong>.</p> 
+  <p>Handling and implementing errors is a way of communicating with both users and other programmers when our program goes into an unexpected state. It also helps us identify and record the diagnostic information, in order to debug and fix our program in the future.</p> 
+  <p>In this topic, we'll learn about errors in Go, the ways of creating custom errors, as well as about the common practice of wrapping errors when we want to give additional context to them.</p> 
+  <h5>What is an error?</h5> 
+  <p>Errors indicate an unwanted condition that occurs in our program. Whenever something unexpected happens, we get an error. Go has embedded support for errors that works in a simple way: functions return errors as their last return value. In layperson's terms, that means that we can check the error immediately, before proceeding to the next steps of the function.</p> 
+  <p>In Go, many functions of packages contained in the <em>Standard library</em> have predefined errors. Let's take a look at an example of a predefined error occurring when trying to open a non-existing file using the <code class="language-go">os.Open</code> function:</p> 
+  <pre><code class="language-go">package main
+
+import (
+    "log"
+    "os"
+)
+
+func main() {
+    // Try to open a non-existing file: "new_file.txt"
+    file, err := os.Open("new_file.txt") // os.Open returns two values: the file and an error
+    if err != nil {
+        log.Fatal(err) // Log the error &amp; exit the program with the exit code 1 - meaning: general error
+    }
+    defer file.Close() // This line closes the file before exiting the program
+}
+
+// Output:
+// 2021/11/07 17:11:38 open new_file.txt: no such file or directory</code></pre> 
+  <p>In the code snippet above, the variable <code class="language-go">err</code> is assigned to the second return value of the <code class="language-go">os.Open</code> function, which is an <code class="language-go">error</code> type value; <code class="language-go">error</code> is an <code class="language-go">interface</code> type declared in Go's <code class="language-go">builtin</code> package, it returns an error message as a <code class="language-go">string</code>, and its default value is <code class="language-go">nil</code>. In this example, since <em>new_file.txt</em> doesn't exist, the value of <code class="language-go">err</code> becomes the following <code class="language-go">error</code> value: <em>"open new_file.txt: no such file or directory".</em> When compared to <code class="language-go">nil</code>, it evaluates to <code class="language-go">false</code>, thus logging the error message into our terminal and finally exiting the program with the <a target="_blank" href="https://tldp.org/LDP/abs/html/exitcodes.html" rel="noopener noreferrer nofollow"><em>exit code 1 — general error</em>.</a></p> 
+  <h5>Creating custom errors</h5> 
+  <p>Go's <em>Standard library</em> offers two functions to create errors: <code class="language-go">errors.New</code> from the <code class="language-go">errors</code> package and <code class="language-go">fmt.Errorf</code> from the <code class="language-go">fmt</code> package. The difference between them is that <code class="language-go">fmt.Errorf</code> provides the ability to add formatting to our error message, which means we can pass a parameter to the <code class="language-go">fmt.Errorf</code> function and include it in the error message.</p> 
+  <p>Suppose we have the <code class="language-go">divide</code> function in our Go program, and we want to show an error message when the user tries to divide a number by zero. Let's take a look at the implementation of the error message when using the<code class="language-go">errors.New</code> and the <code class="language-go">fmt.Errorof</code>functions:</p> 
+  <pre><code class="language-go">// Implementatiion with errors.New
+func divide (num1, num2 float64) (float64, error) {
+    if num2 == 0 {
+        return 0, errors.New("cannot divide by zero")
+    }
+    return num1 / num2, nil
+}
+
+// Output: cannot divide by zero</code></pre> 
+  <pre><code class="language-go">// Implementation with fmt.Errorof
+func divide (num1, num2 float64) (float64, error) {
+    if num2 == 0 {
+        return 0, fmt.Errorf("cannot divide %.2f by %.2f", num1, num2)
+    }
+    return num1 / num2, nil
+}
+
+// Output: cannot divide 10.00 by 0.00</code></pre> 
+  <p>We can clearly see the difference between the two outputs. When using <code class="language-go">errors.New</code>, we can only output a <code class="language-go">string</code> as the error message. However, when using <code class="language-go">fmt.Errorf</code>, we can add additional information to the error message by passing <code class="language-go">num1</code> and <code class="language-go">num2</code> as parameters, so that the user knows what numeric values are within each variable.</p> 
+  <h5>Wrapping errors</h5> 
+  <p>In Go, when a function returns an error, it's common for the calling function to add more context by wrapping the error. This approach is often used to provide clear information on where in our program the error originated.</p> 
+  <p>We can create <strong>wrapped errors</strong> by using the <code class="language-go">%w</code> verb with the <code class="language-go">fmt.Errorf</code> function. Apart from that, we can also output the original error or unwrapped error via the <code class="language-go">errors.Unwrap</code> function. Let's take a look at the implementation of both functions in a Go program:</p> 
+  <pre><code class="language-go">package main
+
+import (
+    "errors"
+    "fmt"
+    "io/ioutil"
+)
+
+// The function openFile returns a custom error message if opening the file fails
+func openFile(filename string) error {
+    if _, err := ioutil.ReadFile(filename); err != nil {
+        return fmt.Errorf("error opening %s: %w", filename, err)
+    }
+
+    return nil
+}
+
+func main() {
+    err := openFile("new_file.txt")
+
+    if err != nil {
+        fmt.Printf("error running main.go: %s \n", err.Error()) // Print the wrapped error message
+
+        unwrappedErr := errors.Unwrap(err) // This line unwraps the error
+        fmt.Printf("unwrapped error: %v \n", unwrappedErr) // Print the original error message
+    }
+}</code></pre> 
+  <p>After executing this program, we will have the following output:</p> 
+  <pre><code class="language-go">error running main.go: error opening new_file.txt: open new_file.txt: no such file or directory
+unwrapped error: open new_file.txt: no such file or directory</code></pre> 
+  <p>We can see that the first line outputs a wrapped error. It first prints a context message: <em>"error running main.go";</em> after that, it prints the custom error: <em>"error opening new_file.txt"</em> created within the <code class="language-go">openFile</code> function. Finally, it prints the original error: <em>"open new_file.txt: no such file or directory".</em></p> 
+  <p>Meanwhile, the second line unwraps the custom error message. It simply prints a context message: <em>"unwrapped error:",</em> followed by the original error: <em>"open new_file.txt: no such file or directory".</em></p> 
+  <h5>Summary</h5> 
+  <p>In this topic, we've learned what is an error in Go, how to print predefined errors from packages, how to create our own custom errors, as well as how to give additional error context by wrapping consecutive error messages together.</p> 
+  <p>Knowing how to properly implement errors in a Go program is a valuable skill. By employing the error handling techniques that we've covered in this topic we'll be able to write more reliable and succinct Go code. Way to go!</p>
+ </body>
+</html>

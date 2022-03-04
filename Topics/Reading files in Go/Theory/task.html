@@ -1,0 +1,171 @@
+<h2>Reading files in Go</h2>
+<html>
+ <head></head>
+ <body>
+  <p>Quite often, you'll need your program to work with data that is outside the codebase, and regularly this data will come in the form of files.</p> 
+  <p>In this topic, you'll learn different ways of reading files in Go, in particular how to read text files.</p> 
+  <h5>Reading files using the ioutil package</h5> 
+  <p>One of the most straightforward ways to read a file in Go is with the help of the <code class="language-go">io/ioutil</code> package. It allows us to read the whole file directly, and makes sure that the file is closed after reading it. It means that we don't need to worry about file descriptors leakage due to not closing the file. Let's go ahead and read the contents of <em><a target="_blank" href="https://stepik.org/media/attachments/lesson/611467/test_file.txt" rel="noopener noreferrer nofollow">test_file.txt</a></em> via the <code class="language-go">ioutil.Readfile()</code> function:</p> 
+  <pre><code class="language-go">package main
+
+import (
+    "fmt"
+    "io/ioutil"
+    "log"
+)
+
+func main() {
+    file, err := ioutil.ReadFile("test_file.txt") // test_file.txt is inside the local directory
+    if err != nil {
+        log.Fatal(err) // exit if we have an unexpected error
+    }
+    fmt.Println(string(file))
+}
+
+// Output:
+// Hello! This is the first line of a text file.
+// This is the second line.</code></pre> 
+  <p>The <code class="language-go">ioutil.Readfile()</code> function has one required parameter — <code class="language-go">filename</code>, which is the complete path of the file we want to open. In the example above, we have passed <code class="language-go">"test_file.txt"</code> as the <code class="language-go">filename</code> parameter, since <em>test_file.txt </em>should be present in our current working directory.</p> 
+  <p>When we read a file via the <code class="language-go">ioutil.Readfile()</code> function, the entire content of the file is loaded into memory as a slice of bytes. To see the text contents of the file properly, we convert it to a <code class="language-go">string</code> in the line #14 before printing it.</p> 
+  <p></p>
+  <div class="alert alert-primary">
+   Since this is a very direct approach to reading a file in Go, we should only use the 
+   <code class="language-go">ioutil.Readfile()</code> function when working with small or medium-sized files, to avoid creating any performance bottlenecks in our program.
+  </div>
+  <p></p> 
+  <h5>Reading files line by line</h5> 
+  <p>We can also read a text file line by line: this can be achieved with the help of the functions <code class="language-go">NewScanner()</code> and <code class="language-go">Text()</code> in the <code class="language-go">bufio</code> package. Let's read <em>test_file.txt</em> line by line:</p> 
+  <pre><code class="language-go">package main
+
+import (
+    "bufio"
+    "fmt"
+    "log"
+    "os"
+)
+
+func main() {
+    // open the file "test_file.txt" in read-only mode
+    file, err := os.Open("test_file.txt")
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer file.Close() // this line closes the file before exiting the program
+
+    scanner := bufio.NewScanner(file) // create a new Scanner for the file
+
+    for scanner.Scan() {
+        fmt.Println(scanner.Text()) // the Text() function converts the scanned bytes to a string
+    }
+
+    if err := scanner.Err(); err != nil {
+        log.Fatal(err)
+    }
+}</code></pre> 
+  <p>In the line #18, the function <code class="language-go">bufio.NewScanner()</code> creates a <strong>Scanner</strong> type within the <code class="language-go">scanner</code> variable. It provides a convenient interface for reading data of <em>newline-delimited</em> lines of a text as <strong>tokens</strong> from a file. In very simple terms, the Scanner looks by default for the newline <code class="language-go">\n</code> character at the end of each line in the text file and then separates the line from the rest.</p> 
+  <p>Then in the line #20, we create a <code class="language-go">for</code> loop that makes the Scanner iterate over every previously split line within the file, thus printing the following output:</p> 
+  <pre><code class="language-go">Hello! This is the first line of a text file.
+This is the second line.</code></pre> 
+  <h5>Reading files word by word</h5> 
+  <p>Another way to read text files without loading them completely into memory is to read the data word by word. We can scan and split the content of our text file by words with the help of the <code class="language-go">ScanWords</code> function in the <code class="language-go">bufio</code> package. Let's go ahead and read the contents of a new file <em><a target="_blank" href="https://stepik.org/media/attachments/lesson/611467/song.txt" rel="noopener noreferrer nofollow">song.txt</a></em> word by word:</p> 
+  <pre><code class="language-go">package main
+
+import (
+    "bufio"
+    "fmt"
+    "log"
+    "os"
+)
+
+func main() {
+    file, err := os.Open("song.txt")
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer file.Close()
+
+    scanner := bufio.NewScanner(file)
+
+    scanner.Split(bufio.ScanWords)  // split each scanned line into words
+
+    for scanner.Scan() {
+        fmt.Println(scanner.Text())
+    }
+
+    if err := scanner.Err(); err != nil {
+        log.Fatal(err)
+    }
+}</code></pre> 
+  <p>In the example above, we call the <code class="language-go">Split</code> function in the line #19 and pass the <code class="language-go">bufio.ScanWords</code> function as a parameter that makes the Scanner split every token read from the file into words separated by a blank space.</p> 
+  <p>After executing this program we will have the following word by word output:</p> 
+  <pre><code class="language-no-highlight">Work
+it
+make
+it
+do
+it
+makes
+us
+harder
+better
+faster
+stronger</code></pre> 
+  <h5>Reading files in chunks</h5> 
+  <p>When working with big text files, a more efficient approach is to read the file in <strong>chunks</strong>; this means we don't load the whole contents of the file into memory, but instead we load it in small parts or chunks to avoid "out of memory" errors.</p> 
+  <p>We'll use the <code class="language-go">Read()</code> function from the <code class="language-go">os</code> package to read the contents of the file, and the <code class="language-go">make()</code> function from the <code class="language-go">builtin</code> package to create a <strong>buffer</strong> with a predetermined chunk size in bytes:</p> 
+  <pre><code class="language-go">package main
+
+import (
+    "errors"
+    "fmt"
+    "io"
+    "log"
+    "os"
+)
+
+const chunkSize = 15
+
+func main() {
+    file, err := os.Open("test_file.txt")
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer file.Close()
+
+    buf := make([]byte, chunkSize) // create a slice of bytes buffer with 
+                                   // the previously defined chunk size
+
+    for {
+        readTotal, err := file.Read(buf)
+        if err != nil {
+            if errors.Is(err, io.EOF) {
+                break // after reading the last chunk, break the loop
+            }
+            log.Fatal(err)
+        }
+        fmt.Println(string(buf[:readTotal]))
+    }
+}</code></pre> 
+  <p>The output of this code snippet will be the following:</p> 
+  <pre><code class="language-bash">Hello! This is 
+the first line 
+of a text file.
+
+This is the s
+econd line.</code></pre> 
+  <p>After examining the code above, we can see that the key parts of this program are in the line #11, when we declare <code class="language-go">chunkSize</code> to a size of 15, and in the line #20, when we create the buffer <code class="language-go">buf</code> via the <code class="language-go">make()</code> function. The buffer size plays an important role when reading the file in chunks; depending on the buffer size, we can read shorter or longer lines of our text file. Let's take a look at another output of the program, after increasing <code class="language-go">chunkSize</code> to 45:</p> 
+  <pre><code class="language-go">Hello! This is the first line of a text file.
+
+This is the second line.</code></pre> 
+  <p>Since we have 45 characters in the first line of <em>test_file.txt</em> and the chunk size of our buffer variable is 45, the program prints both the first line and the second line completely and doesn't split them like in the first example where the chunk size was 15.</p> 
+  <h5>Summary</h5> 
+  <p>In this topic, we've learned different methods of reading a text file's contents in Go. Knowing all these different methods is quite useful, since files might vary in size and we should be able to adapt to that. If we can easily establish which method to implement when working with a big file or a small file, it will help us make our program efficient and avoid creating performance bottlenecks.</p> 
+  <p>Let's recap all the different ways to read a text file in Go:</p> 
+  <ul> 
+   <li>Read the entire file via the <code class="language-go">ioutil.Readfile()</code> function – recommended only for small or medium-sized files.</li> 
+   <li>Read files line by line, using a <code class="language-go">for</code> loop to iterate through every split line of the file – can be used for any file size.</li> 
+   <li>Read files word by word, using a <code class="language-go">for</code> loop to iterate through each split word of the file – can be used for any file size.</li> 
+   <li>Read the file in chunks by loading the contents of the file into a sized buffer – recommended for big files.</li> 
+  </ul>
+ </body>
+</html>

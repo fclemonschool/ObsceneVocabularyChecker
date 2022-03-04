@@ -1,0 +1,22 @@
+<h2>Using defer to close an open file</h2>
+<html>
+ <head></head>
+ <body>
+  <p>Below you will see a small Go program that creates a file <em>hello.txt</em> and then writes a string to it:</p> 
+  <pre><code class="language-go">func main() {
+    // 1
+    file, err := os.Create("hello.txt")
+    if err != nil {
+        log.Fatal(err)
+        // 2
+    }
+    // 3    
+
+    if _, err := fmt.Fprintln(file, "Hello, JB Academy!"); err != nil {
+        log.Fatal(err)
+    }
+    // 4
+}</code></pre> 
+  <p>Please select which one of the commented lines is the most appropriate to add the <code class="language-go">defer file.Close()</code> statement to.</p>
+ </body>
+</html>

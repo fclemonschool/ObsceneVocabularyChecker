@@ -1,0 +1,32 @@
+type: code
+files:
+- name: main.go
+  visible: true
+  text: |-
+    package main
+
+    // Do not remove any imports!
+    import (
+        "errors"
+        "fmt"
+    )
+
+    func brokenMessage() error {
+        // create the main error here - you can use errors.New or fmt.Errorf
+        err := ?
+
+        // create the wrapped error here using fmt.Errorf and the %w verb
+        wrappedErr := ?
+
+        return wrappedErr // Do not delete this line!
+    }
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/16779#comment
+status: Solved
+feedback:
+  message: |-
+    <html>Passed. Well done! 🏆 - you helped Mr. Krabs 🦀 save a lot of money 💵 on that sign!
+
+    error: can't serve you an ice cream main cause of error: ice cream machine is broken</html>
+  time: Thu, 03 Mar 2022 04:36:56 UTC
+record: -1

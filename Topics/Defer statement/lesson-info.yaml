@@ -1,0 +1,6 @@
+content:
+- Theory
+- Using defer to print a reversed string
+- Using defer to close an open file
+- What is a defer statement
+- Most basic defer implementation

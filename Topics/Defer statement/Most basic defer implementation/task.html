@@ -1,0 +1,13 @@
+<h2>Most basic defer implementation</h2>
+<html>
+ <head></head>
+ <body>
+  <p>Daniel had a Go program that took as input the first name of a person, then the last name, and finally printed it to terminal:</p> 
+  <pre><code class="language-go">James // firstName
+Bond  // lastName</code></pre> 
+  <p>He wanted to change his program, for the output to be just like James Bond's famous introduction: <em>"Bond, James Bond":</em></p> 
+  <pre><code class="language-go">Bond,
+James Bond</code></pre> 
+  <p>Daniel tried to change his Go program to achieve this type of output by implementing <code class="language-go">defer</code> statements. However, he's made some mistakes. To fix the program and get the proper output, you need to delete some <code class="language-go">defer</code> statements and also add a new one!</p>
+ </body>
+</html><br><b>Sample Input:</b><br><pre><code class="language-no-highlight">James<br>Bond</code></pre><br><b>Sample Output:</b><br><pre><code class="language-no-highlight">Bond,<br>James Bond</code></pre><br><br><br><font color="gray">Memory limit: 256 MB</font><br><font color="gray">Time limit: 8 seconds</font><br><br>

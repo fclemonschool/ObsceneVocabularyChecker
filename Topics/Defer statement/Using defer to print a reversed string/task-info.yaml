@@ -1,0 +1,29 @@
+type: code
+custom_name: Using defer to print a reversed string!
+files:
+- name: main.go
+  visible: true
+  text: |-
+    package main
+
+    import "fmt"
+
+    func main() {
+        // delete or add new defer statements below!
+        var name string
+        fmt.Scanln(&name)
+
+        fmt.Printf("Your name is: %s\n", string(name))
+        defer fmt.Printf("Reversed name: ")
+
+        for _, char := range []rune(name) {
+            fmt.Printf("%c", char)
+        }
+    }
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/17699#comment
+status: Solved
+feedback:
+  message: <html>Correct solution</html>
+  time: Thu, 03 Mar 2022 05:15:18 UTC
+record: -1

@@ -1,0 +1,130 @@
+<h2>Defer statement</h2>
+<html>
+ <head></head>
+ <body>
+  <p>Often we'll need to clean up resources, such as open files or open database connections. When our program is finished working with these resources, it's important to close them to avoid memory leaks and also allow other programs or applications to open and access these resources.</p> 
+  <p>In this topic, we'll learn about one special statement in Go that we can use for cleaning up resources during the execution of our program. It will help us make our code cleaner and less error-prone by keeping the calls to close the resource in proximity to the call that opened the resource previously.</p> 
+  <h5>The defer statement</h5> 
+  <p>In Go, we use the <strong>defer</strong> statement to delay the execution of a function until the surrounding function returns.</p> 
+  <p>To further explain how the <code class="language-go">defer</code> statement works, let's take a look at its most basic implementation:</p> 
+  <pre><code class="language-go">package main
+
+import "fmt"
+
+func main() {
+    defer fmt.Println("Printed second! 2️⃣")
+    fmt.Println("Printed first! 1️⃣")
+}
+
+// Output:
+// Printed first! 1️⃣
+// Printed second! 2️⃣</code></pre> 
+  <p>Notice that even though "Printed second! 2️⃣" is the first line in our program, it is not the first output! This is because any statement that is preceded by the <code class="language-go">defer</code> statement isn't invoked until the end of the function in which <code class="language-go">defer</code> was used.</p> 
+  <h5>Multiple defer statements</h5> 
+  <p>We can have many instances of the defer statement in our Go program. When there are multiple deferred statements, they are stored and executed as a <strong>stack</strong>.</p> 
+  <p>The following example will illustrate how multiple defer statements and stacks work:</p> 
+  <pre><code class="language-go">package main
+
+import "fmt"
+
+func main() {
+    defer fmt.Println("🐥") // first  1️⃣ deferred statement
+    defer fmt.Println("🐣") // second 2️⃣ deferred statement
+    defer fmt.Println("🥚") // third  3️⃣ deferred statement
+}
+
+// Output:
+// 🥚
+// 🐣
+// 🐥</code></pre> 
+  <p>In the above code, we first defer the <code class="language-go">defer fmt.Println("🐥")</code>, which means it gets executed last. The <code class="language-go">defer fmt.Println("🥚")</code>, which we defer last, is executed first.</p> 
+  <p>In very simple terms, each time we defer a statement, we push it onto a stack and then call it out in Last In, First Out (LIFO) order:</p> 
+  <p style="text-align: center;"><img alt="" height="431" name="defer_chick_stack.png" src="https://ucarecdn.com/a151c389-d31f-4d15-a327-9272db333805/" width="421"></p> 
+  <h5>Defer with multiple functions</h5> 
+  <p>When working with multiple functions that have <code class="language-go">defer</code> statements, it is important to note that the <code class="language-go">defer</code> statement is scoped to<em> </em>the function inside which we declare it.</p> 
+  <p>Let's go ahead and look at the following example, where we call the <code class="language-go">hello()</code> function from the <code class="language-go">main()</code> function:</p> 
+  <pre><code class="language-go">package main
+
+import "fmt"
+
+func greeting() {
+    defer fmt.Println("Printed after Hello, JB Academy!") // 2️⃣
+
+    fmt.Println("Hello, JB Academy!") // 1️⃣
+}
+
+func main() {
+    defer fmt.Println("Printed after the main() function is completed.") // 4️⃣
+
+    greeting()
+
+    fmt.Println("Printed after calling the greeting() function.") // 3️⃣
+}
+
+// Output:
+// Hello, JB Academy!
+// Printed after Hello, JB Academy!
+// Printed after calling the greeting() function.
+// Printed after the main() function is completed.</code></pre> 
+  <p>After examining the code above, we can see that the deferred <code class="language-go">fmt.Println(...)</code> statement within the <code class="language-go">greeting()</code> function is executed once <code class="language-go">greeting</code> is completed. The same occurs with the deferred <code class="language-go">fmt.Println(...)</code> within the <code class="language-go">main()</code> function after it is completed.</p> 
+  <p>The following diagram helps us see more clearly the execution of the deferred statements within multiple functions:</p> 
+  <p style="text-align: center;"><img alt="" height="341" name="multiple_statements.png" src="https://ucarecdn.com/7ec63855-3c05-4cb5-bedf-f6219afec3a8/" width="521"></p> 
+  <p>In simple terms, when working with multiple functions that contain <code class="language-go">defer</code> statements, the program executes every deferred statement within a function once the function it is contained within is completed or finished.</p> 
+  <p>We can take a look at another example of scoped deferred statements below:</p> 
+  <pre><code class="language-go">...
+
+func scopedDefer() {
+    n := 0
+    defer func() { fmt.Println("n =", n, "- first deferred print") }()
+    {
+        defer func() { fmt.Println("n =", n, "- second deferred print") }()
+        n++ // n = 1
+    }
+    n++ // n = 2
+}
+
+// Output:
+// n = 2 - second deferred print
+// n = 2 - first deferred print</code></pre> 
+  <p>When checking the output of our program, we can see that the deferred <code class="language-go">fmt.Println(...)</code> statements are only executed when the <code class="language-go">scopedDefer()</code> function is completed. We can confirm this by checking the value of <code class="language-go">n = 2</code>, which means that <code class="language-go">n</code> was incremented two times, having its last increment just before the <code class="language-go">scopedDefer()</code> function is completed.</p> 
+  <h5>Implementing defer to close a file</h5> 
+  <p>Although the previous examples show the order in which <code class="language-go">defer</code> would be executed, they are not the most common ways we would use the <code class="language-go">defer</code> statement within a Go program. The most standard implementation of <code class="language-go">defer</code> is to clean up a resource such as an<em> </em>open file.</p> 
+  <p>Let's go ahead and take a look at the use of the <code class="language-go">defer</code> statement when writing a string to a file:</p> 
+  <pre><code class="language-go">package main
+
+import (
+    "fmt"
+    "log"
+    "os"
+)
+
+func main() {
+    file, err := os.Create("test.txt") // create and open 'test.txt' in read-and-write mode
+    if err != nil {
+        log.Fatal(err) // exit the program if we have an unexpected error
+    }
+    defer file.Close() // close the file before exiting the program
+
+    if _, err := fmt.Fprintln(file, "Hello World!"); err != nil {
+        log.Fatal(err)
+    }
+}</code></pre> 
+  <p>Pay attention to the <code class="language-go">defer file.Close()</code> statement. It tells the compiler that it should close the file right after executing the <code class="language-go">fmt.Fprintln(...)</code> function, just before the program is about to finish.</p> 
+  <p></p>
+  <div class="alert alert-primary">
+   Do not worry right now about the code implementation of how to create a file and write a string to it! This is just an example of one of the most common applications of the 
+   <code class="language-go">defer</code> statement in a Go program; we'll learn how to work with files in Go in future topics.
+  </div>
+  <p></p> 
+  <p>Deferring a call to a function such as <code class="language-go">file.Close()</code> has two advantages. First, it guarantees that you will never forget to close a file, a mistake that's easy to make if we edit the function later to add a new return path. Second, it means that the <code class="language-go">file.Close()</code> statement is in proximity to the <code class="language-go">os.Create()</code> function, which is much clearer than placing it at the end of the <code class="language-go">main()</code> function.</p> 
+  <h5>Summary</h5> 
+  <p>In this topic, we've learned about the <code class="language-go">defer</code> statement. It helps us delay the execution of a function until the surrounding function returns. We've covered in detail the following theory:</p> 
+  <ul> 
+   <li>The basic implementation and behavior of the <code class="language-go">defer</code> statement in a Go program.</li> 
+   <li>With multiple <code class="language-go">defer</code> statements, we push them onto a stack and execute them in Last In, First Out (LIFO) order.</li> 
+   <li>When working with multiple functions, the program executes every deferred statement within a function once the function it is contained within is completed<em>.</em></li> 
+   <li>One of the most common use cases of the <code class="language-go">defer</code> statement in Go is implementing <code class="language-go">defer</code> to close a file.</li> 
+  </ul> 
+  <p>Now, to make sure you remember this theory and are able to implement the <code class="language-go">defer</code> statement in your future Go programs, let's work on a few coding and theory problems.</p>
+ </body>
+</html>

@@ -1,0 +1,20 @@
+type: code
+custom_name: Jerry's best friends ever!
+files:
+- name: main.go
+  visible: true
+  text: "package main\n\nimport \"fmt\"\n\nfunc createSet() map[string]bool {\n  \
+    \  // fix the type of the bestFriends map values.\n\tbestFriends := map[string]string\
+    \ {\n\t\t\"George Costanza\": \"true\",\n\t\t\"Elaine Benes\": \"true\",\n\t\t\
+    \"Cosmo Kramer\": \"true\",\n\t}\n\n\treturn bestFriends // do not delete this\
+    \ line!\n}"
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/17211#comment
+status: Solved
+feedback:
+  message: |-
+    <html>George Costanza is one of Jerry's best friends
+
+    Well done! 👓🧑🏻‍🦲👔</html>
+  time: Fri, 04 Mar 2022 08:56:09 UTC
+record: -1

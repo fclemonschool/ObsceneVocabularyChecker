@@ -1,0 +1,118 @@
+<h2>Operations with maps</h2>
+<html>
+ <head></head>
+ <body>
+  <p>Today we continue our discussion about maps. In this topic, we will learn how to pass an estimate for the initial capacity of a map, check the length of a map, and delete items (key-value pairs) from a map. We will also look at how to iterate over all key-value pairs in a map with the help of the <code class="language-go">for...range</code> loop and how to implement a new data type that is not native to Go with the help of maps.</p> 
+  <h5>Allocating capacity and checking the map length </h5> 
+  <p>To start learning about additional operations that we can perform with maps, first we need to declare and initialize one. Let's go ahead and create the <code class="language-go">elements</code> map via the <code class="language-go">make</code> function and add one additional argument known as <code class="language-go">hint</code>:</p> 
+  <pre><code class="language-go">elements := make(map[string]string, 3) // the initial capacity of 'elements' is 3</code></pre> 
+  <p>As you can see in the above declaration, the <code class="language-go">hint</code> argument allows us to pass the <code class="language-go">make</code> function an estimate of the initial capacity of the map.</p> 
+  <p></p>
+  <div class="alert alert-primary">
+   In Go, maps are mutable and they will grow on-demand, no matter which initialization method we choose. However, by passing the additional 
+   <code class="language-go">hint</code> argument, we can pre-allocate memory for at least 
+   <code class="language-go">hint</code> amount of entries in the map, which results in a subtle increase in run-time performance.
+  </div>
+  <p></p> 
+  <p>Now that we have declared and initialized the <code class="language-go">elements</code> map, let's add some items or key-value pairs to it:</p> 
+  <pre><code class="language-go">elements["H"] = "Hydrogen"
+elements["He"] = "Helium"
+elements["Li"] = "Lithium"</code></pre> 
+  <p>Once we have added items to our map, we can work with its content in different ways. Let's start by checking the length of the map via the <code class="language-go">len</code> function in the <code class="language-go">builtin</code> package. This will help us learn how many key-value pairs there are in our map:</p> 
+  <pre><code class="language-go">fmt.Println("element length is:", len(elements)) // element length is: 3</code></pre> 
+  <p>Although we have previously passed the argument <code class="language-go">hint</code> with the capacity of 3 when declaring the <code class="language-go">elements</code> map, we could add more elements to this map without any problems. Because, as we've mentioned, Go maps are mutable and they will grow on-demand, no matter which initialization method we choose:</p> 
+  <pre><code class="language-go">elements["Be"] = "Beryllium"
+elements["B"] = "Boron"
+
+fmt.Println("element length is:", len(elements)) // element length is: 5</code></pre> 
+  <h5>Deleting items from a map</h5> 
+  <p>We can delete items from a map with the help of the <code class="language-go">delete</code> function from Go's <code class="language-go">builtin</code> package:</p> 
+  <pre><code class="language-go">delete(elements, "H")
+
+fmt.Println(elements) // map[B:Boron Be:Beryllium He:Helium Li:Lithium]</code></pre> 
+  <p>The delete function works as follows: it takes the name of the map as its first argument and a specified key from the same map as its second argument. In the above example, we pass the map <code class="language-go">elements</code> and the key <code class="language-go">H</code>, thus deleting the <code class="language-go">H:Hydrogen</code> key/value pair from the <code class="language-go">elements</code> map.</p> 
+  <p></p>
+  <div class="alert alert-primary">
+   An important detail regarding the 
+   <code class="language-go">delete</code> function is that if we try to delete a key that is not present in the map, nothing will be deleted and there will be no runtime error.
+  </div>
+  <p></p> 
+  <p>Finally, if we tried to check the <code class="language-go">elements</code> map length after deleting the <code class="language-go">H</code> key, we would get the following output:</p> 
+  <pre><code class="language-go">fmt.Println("element length is:", len(elements)) // element length is: 4</code></pre> 
+  <h5>Iterating over all items in a map</h5> 
+  <p>We can iterate over all the items in a map using the <code class="language-go">for...range</code> loop. However, since a map is an unordered collection of keys and values, we never know exactly in what order the map's contents will be organized.</p> 
+  <p>We'll start off by implementing a <code class="language-go">for..range</code> loop to iterate over the keys of the <code class="language-go">elements</code> map:</p> 
+  <pre><code class="language-go">for key := range elements {
+    fmt.Println(key)
+}
+
+// Output:
+// B
+// Li
+// He
+// Bo</code></pre> 
+  <p>We can also iterate over key-value pairs at the same time! Let's create a new map <code class="language-go">movieRatings</code> that will contain a movie's name as a key and a movie's <a target="_blank" href="https://editorial.rottentomatoes.com/guide/all-keanu-reeves-movies-ranked/" rel="noopener noreferrer nofollow">RottenTomatoes</a> rating as its integer-type value; then we'll implement a <code class="language-go">for...range</code> loop to iterate over the map's key-value pairs:</p> 
+  <pre><code class="language-go">movieRatings := map[string]int{
+    "The Matrix": 88,
+    "Speed": 94,
+    "The Matrix Reloaded": 73,
+    "John Wick": 86,
+}
+
+// Option #1 - create the 'val' variable to print the values of the map
+for key, val := range movieRatings {
+    fmt.Println(key, val)
+}
+
+// Output:
+// The Matrix 88
+// Speed 94
+// The Matrix Reloaded 73
+// John Wick 86</code></pre> 
+  <p>Another way to print key-value pairs at the same time is to pass the <code class="language-go">key</code> variable within square brackets <code class="language-go">[]</code> after the map's name within the <code class="language-go">for...range</code> loop:</p> 
+  <pre><code class="language-go">// Option #2 - pass the 'key' variable within [] square brackets after the map's name
+for key := range movieRatings {
+    fmt.Println(key, movieRatings[key])
+}</code></pre> 
+  <p>If you try to run the above code multiple times, you will probably get the key-value pairs of movie names and ratings in a different order; this happens because maps are<strong> unordered collections</strong>.</p> 
+  <h5>Implementing maps to create a set</h5> 
+  <p>A <strong>set</strong> is an abstract data type that can store unique elements without any particular order. Since sets can't have multiple occurrences of the same element, it makes them a highly efficient data type to perform logical operations such as unions or intersections.</p> 
+  <p>Although Go doesn't have sets natively, we can implement our own set data type with the help of maps. Let's take a look at the most basic implementation of a set, and create a map with the <code class="language-go">string</code> type for keys and the <code class="language-go">bool</code> type for values:</p> 
+  <pre><code class="language-go">vegetables := map[string]bool{
+    "🥕": true,
+    "🧅": true,
+    "🥦": true,
+}</code></pre> 
+  <p>After creating the <code class="language-go">vegetables</code> set, we can perform some basic operations such as checking if an element exists within the set:</p> 
+  <pre><code class="language-go">...
+
+if _, ok := vegetables["🥕"]; ok {
+    fmt.Println("🥕 is in the set.")
+}
+	
+if _, ok := vegetables["🍇"]; ok {
+    fmt.Println("🍇 is in the set.")
+}
+
+// Output:
+// 🥕 is in the set</code></pre> 
+  <p>Another way to create a set is by using an empty <code class="language-go">struct</code> type for values:</p> 
+  <pre><code class="language-go">fruits := map[string]struct{}{
+    "🍎": struct{}{},
+    "🍊": struct{}{},
+    "🥝": struct{}{},
+}</code></pre> 
+  <p>In very simple terms, the difference between using <code class="language-go">bool</code> or empty <code class="language-go">struct</code> type for values when creating a set is that an empty <code class="language-go">struct</code> will take 0 bytes of memory, in contrast to 1 byte that a <code class="language-go">bool</code> type will require. This might not look like a big deal with small sets such as in the previous examples, however, when working with big sets, it is more efficient to use an empty <code class="language-go">struct</code> as the value type, because it will take up less memory, and also the processing time will be much faster.</p> 
+  <p>If you want to know more about the performance gain when using empty <code class="language-go">struct</code> types as values for maps, you can take a look at this <a target="_blank" href="https://levelup.gitconnected.com/memory-allocation-and-performance-in-golang-maps-b267b5ad9217" rel="noopener noreferrer nofollow">article</a>. It shows that if a map has at least 100 items, an empty <code class="language-go">struct</code> type as a map's value is about 47.76% faster and consumes up to 164.52% less memory compared to <code class="language-go">interface{}</code> type values.</p> 
+  <h5>Summary</h5> 
+  <p>In this topic, we've learned additional operations with maps, such as:</p> 
+  <ul> 
+   <li>Passing an estimate of the initial capacity of a map to the <code class="language-go">hint</code> argument of the <code class="language-go">make</code> function;</li> 
+   <li>Checking the length of the map via the <code class="language-go">len</code> function;</li> 
+   <li>Deleting key-value pairs from a map by passing both the name of the map and the key as arguments to the <code class="language-go">delete</code> function;</li> 
+   <li>Different ways of iterating over all items in a map using the <code class="language-go">for...range</code> loop.</li> 
+  </ul> 
+  <p>We've also learned how to create a new data type called set with the help of maps by using <code class="language-go">bool</code> or empty <code class="language-go">struct</code> types as the map's values. Sets are data types that do not allow multiple occurrences of the same element and can be useful for many logical operations.</p> 
+  <p>Now, to make sure you remember all this information and can implement it, let's answer a couple of questions and do some exercises. Good job!</p>
+ </body>
+</html>

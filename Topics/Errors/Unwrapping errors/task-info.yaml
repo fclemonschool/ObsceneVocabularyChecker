@@ -1,0 +1,17 @@
+type: code
+files:
+- name: main.go
+  visible: true
+  text: "package main\n\nimport (\n\t\"errors\"\n\t\"fmt\"\n)\n\nfunc main () {\n\t\
+    err := errors.New(\"error: am I the original error?\")\n\terr = fmt.Errorf(\"\
+    error: no! I'm the original error! %w\", err)\n\n\t// call the errors.Unwrap function\
+    \ here and pass err as the argument\n\tunwrappedErr := ?\n\n\t// print the unwrapped\
+    \ error here\n}"
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/16780#comment
+status: Solved
+feedback:
+  message: <html>Passed. Well done! 🥇 You unwrapped the error and printed the original
+    error message.</html>
+  time: Thu, 03 Mar 2022 04:33:24 UTC
+record: -1

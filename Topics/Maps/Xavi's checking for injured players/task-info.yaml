@@ -1,0 +1,25 @@
+type: code
+custom_name: Xavi's checking for injured players!
+files:
+- name: main.go
+  visible: true
+  text: "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// do not change the values\
+    \ inside the map!\n    injuredPlayers := map[string]int{\n        \"Aguero\":\
+    \  93,\n        \"Dembele\": 45,\n        \"Pedri\": 4,\n    }\n\n    var player\
+    \ string\n\n    fmt.Scanln(?) // take input of the player name here within the\
+    \ 'player' variable\n\n    // implement the val, ok check below to verify if the\
+    \ player is on the map\n    if ?, ? := injuredPlayers[?]; ? {\n        fmt.Println(\"\
+    The player\", ?, \"will recover in\", ?, \"days\")\n        return\n    }\n  \
+    \  fmt.Println(\"The player\", ?, \"is not injured\")\n}"
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/17003#comment
+status: Solved
+feedback:
+  message: |-
+    <html>Xavi says moltes gràcies! (thanks a lot!)🤵🏻⚽
+
+    The player Aguero will recover in 93 days
+    The player Memphis is not injured
+    The player Pedri will recover in 4 days</html>
+  time: Thu, 03 Mar 2022 06:21:53 UTC
+record: -1
