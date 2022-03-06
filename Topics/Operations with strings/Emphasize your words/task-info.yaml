@@ -1,0 +1,15 @@
+type: code
+files:
+- name: main.go
+  visible: true
+  text: "package main\n\nimport (\n    \"bufio\"\n    \"fmt\"\n    \"os\"\n    \"\
+    strings\"\n)   \n\nfunc makeItLouder(original string) string {\n    return ? //\
+    \ return LOUDER line\n}\n\n// DO NOT EDIT\nfunc main() {\n    scanner := bufio.NewScanner(os.Stdin)\n\
+    \    scanner.Scan()\n    fmt.Println(makeItLouder(scanner.Text()))\n}"
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/18554#comment
+status: Solved
+feedback:
+  message: <html>Correct solution</html>
+  time: Sat, 05 Mar 2022 12:54:48 UTC
+record: -1

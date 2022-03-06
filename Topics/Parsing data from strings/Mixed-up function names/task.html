@@ -1,0 +1,32 @@
+<h2>Mixed-up function names!</h2>
+<html>
+ <head></head>
+ <body>
+  <p>Homer has created a small Go program that takes as an input an <code class="language-go">int</code> type number within the <code class="language-go">num</code> variable, then converts it to a string and prints the converted type and its value to the console.</p> 
+  <p>Since Homer is very lazy, he didn't read in detail the theory on the topic, mixed-up function names, and used an incorrect function in his program! Below is the code he has written so far:</p> 
+  <pre><code class="language-go">package main
+
+import (
+    "fmt"
+    "strconv"
+)
+
+func main() {
+    var num int
+    fmt.Scanln(&amp;num)
+
+    // What is the correct function to convert int types to strings?
+    val := strconv.Atoi(num)
+
+    fmt.Printf("%T %v", val, val)
+}</code></pre> 
+  <p>Please help Homer fix his program by writing below the correct function required to convert <code class="language-go">int</code> types to strings... remember to pass the <code class="language-go">num</code> variable as an argument to the function!</p> 
+  <p><button class="btn-sm btn-outline-secondary" onclick="getElementById('hint-991').style.display='inline'"> Hint </button> </p>
+  <div id="hint-991" style="display:none;">
+   You only need to write the correct function name with the 
+   <code class="language-go">num</code> argument, like this: 
+   <code class="language-go">strconv.?(num)</code>.
+  </div>
+  <p></p>
+ </body>
+</html>

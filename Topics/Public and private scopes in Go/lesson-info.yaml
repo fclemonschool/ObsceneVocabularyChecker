@@ -1,0 +1,7 @@
+content:
+- Theory
+- The limited scope of local variables
+- Accessing a public function
+- Creating a global variable
+- Type of struct
+- Shadowed variables

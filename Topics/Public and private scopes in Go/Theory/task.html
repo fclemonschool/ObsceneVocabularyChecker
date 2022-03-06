@@ -1,0 +1,169 @@
+<h2>Public and private scopes in Go</h2>
+<html>
+ <head></head>
+ <body>
+  <p>When we create a package in Go, we want to make it accessible for other programmers to use, either in other packages or in the entire Go project. By importing a package via the <code class="language-go">import packagename</code> syntax, we can use the code contained within the imported package as a component for a more complex program.</p> 
+  <p>However, only certain packages and only certain code parts (such as variables, functions, or types) within some packages are available for importing. It is determined by both the visibility of the package and the <strong>scope</strong> where these code parts are declared.</p> 
+  <h5>Public and private scope</h5> 
+  <p>Go determines the scope of a data type through the way it is declared. In simple terms, this means that any variable, constant, type, or function will be in a <strong>public</strong> (exported) or <strong>private</strong> (unexported) scope, depending on whether the first letter of the variable is capitalized or not.</p> 
+  <p>We can illustrate this with a simple example. Look at it and pay careful attention to capitalization:</p> 
+  <pre><code class="language-go">package hello
+
+var Welcome string = "I'm a Public variable! 🔓" // this is a public (exported) variable
+
+var greeting string = "I'm a private variable. 🔒" // this is a private (unexported) variable</code></pre> 
+  <p>After importing the <code class="language-go">hello</code> package within the <code class="language-go">main</code> package of our Go program, we'll be able to access the <code class="language-go">Welcome</code> variable via the <code class="language-go">hello.Welcome</code> syntax using the <code class="language-go">.</code> operator. However, we won't be able to access the <code class="language-go">greeting</code> variable, and if we tried to do so, we would get the compiler error: <code class="language-go">cannot refer to unexported name hello.greeting</code>.</p> 
+  <p>Let's look at another example with public and private functions. If we capitalize the first letter of a function within a package, other packages within our project will be able to access it. In turn, if we don't capitalize it, the function will be private and inaccessible:</p> 
+  <pre><code class="language-go">package hello
+
+...
+
+func PublicFunc() string { // public function declarations begin with a capital letter
+    return "I am a Public function! 📢🔓🙋‍♂️"
+}
+
+func privateFunc() string { // private function declarations begin with a lowercase letter
+    return "I am a private function. 🤫🔒🚧"
+}</code></pre> 
+  <p>To access the public function <code class="language-go">PublicFunc()</code> in the future, we can import the <code class="language-go">hello</code> package to any other package in our project, and simply call the function via the <code class="language-go">hello.PublicFunc()</code> syntax.</p> 
+  <p></p>
+  <div class="alert alert-warning">
+   In the above example, we are assuming that the 
+   <code class="language-go">hello</code> package is not an 
+   <a target="_blank" href="https://hyperskill.org/learn/step/15906#internal-packages" rel="noopener noreferrer nofollow">internal package</a> within our Go project structure. If it was an internal package, even though the first letter of the function 
+   <code class="language-go">PublicFunc()</code> is capitalized, we wouldn't be able to import it to another package due to internal package import restrictions.
+  </div>
+  <p></p> 
+  <h5>Visibility of structs and struct fields</h5> 
+  <p>Suppose we declare a new struct type in a custom<em> </em>package (not inside the <code class="language-go">main</code> package!). If the name declaration begins with a capital letter it will become a public (exported)<em> </em>type, letting us import it and access it from other packages within our Go project. On the other hand, if the name of the struct begins with a lowercase letter, we won't be able to import the struct within other packages in our project.</p> 
+  <p>Looking at an example will help understand it better. Let's suppose we have the following structure in our example project directory:</p> 
+  <pre><code class="language-bash">example
+├── creatures
+│   └── creatures.go
+├── go.mod
+└── main.go</code></pre> 
+  <p>Within the <code class="language-go">creatures</code> package, we have the <em>creatures.go</em> file that has the <code class="language-go">Animal</code> and <code class="language-go">human</code> struct declarations:</p> 
+  <pre><code class="language-go">package creatures
+
+type Animal struct {
+    Name, Class, Emoji string
+    avgLifespan        int // example of a private struct field: begins with a lowercase letter
+    Domestic           bool
+}
+
+type human struct {
+    name string
+    age  int
+}</code></pre> 
+  <p></p>
+  <div class="alert alert-primary">
+   The same rules regarding capital letters apply to struct fields. For example, the 
+   <code class="language-go">Animal</code> struct will have all of its fields accessible except for the 
+   <code class="language-go">avgLifespan</code> field because it doesn't begin with a capital letter.
+  </div>
+  <p></p> 
+  <p>Since the <code class="language-go">Animal</code> struct begins with a capital letter, it is a public type that we can export and use within the <code class="language-go">main</code> package in the <em>main.go</em> file, and also within other packages in our project. However, we can't use the private <code class="language-go">human</code> struct from the <code class="language-go">creatures</code> package. If we try to create an instance of the <code class="language-go">creatures.human</code> struct we will get the <code class="language-go">cannot refer to unexported name creatures.human</code> compiler error, as in the following example:</p> 
+  <pre><code class="language-go">package main
+
+import "example/creatures"
+
+func main() {
+    // create an instace of the 'Animal' struct imported from the creatures package
+    // this works because the 'Animal' struct is public
+    var crocodile creatures.Animal
+
+    // trying to create an instance of the 'human' struct
+    // this will fail because the 'human' struct is private
+    var jerry creatures.human
+}
+
+// Output:
+// .\main.go:12:15: cannot refer to unexported name creatures.human</code></pre> 
+  <h5>Global variables</h5> 
+  <p>We define <strong>global</strong><em> </em>variables outside the scope of a function or a code block. Usually, we would define them below the <code class="language-go">package</code> and <code class="language-go">import</code> statements, and we can access them from any part of the program.</p> 
+  <p>Let's take a look at an implementation of a global variable in a Go program:</p> 
+  <pre><code class="language-go">package main
+
+import "fmt"
+
+var world = "A global world! 🌎"
+
+func myFunc() string {
+    world = "A world within myFunc! 🌐"
+
+    return world // we can use the global variable 'world' anywhere in our program
+}
+
+func main() {
+    fmt.Println(world) // A global world! 🌎
+
+    world := "A local world! 🗺"
+    fmt.Println(world) // A local world! 🗺
+
+    fmt.Println(myFunc()) // A world within myFunc! 🌐
+}</code></pre> 
+  <p>After declaring and initializing the global variable <code class="language-go">world</code>, we use it for the first time within the <code class="language-go">myFunc()</code> function. Take notice that the contents of the <code class="language-go">world</code> variable will only be accessed and updated when we invoke <code class="language-go">myFunc()</code> within the <code class="language-go">main</code> function of our program!</p> 
+  <p>Next, we go into the <code class="language-go">main</code> function of our program to print <code class="language-go">world</code> for the first time, and the output is the initial content we declared the variable with. After that, we update the variable's content and print it once again to see the new output. Finally, we invoke the <code class="language-go">myFunc()</code> function, updating and printing the content of <code class="language-go">world</code> for the last time.</p> 
+  <p>As you can see, this type of variable manipulation has only been possible because we declared <code class="language-go">world</code> as a global variable, which has given us the flexibility to access it anywhere in our Go program.</p> 
+  <h5>Local variables</h5> 
+  <p>Variables that we declare inside a function or code block are known as <strong>local</strong><em> </em>variables. We can't access these variables outside the function or code block where they are declared.</p> 
+  <p>Let's implement two different local variables in our program:</p> 
+  <pre><code class="language-go">...
+
+func main() {
+    var number int = 4 // creating local variable 'number' within the main function
+
+    fmt.Printf("%d\n", number)
+
+    if number % 2 == 0 {
+        ifResult := "Even" // creating local variable 'ifResult' within the if statement block
+        fmt.Printf("%d is %s\n", number, ifResult)
+    } else {
+        fmt.Printf("%d is %s\n", number, "Odd")
+    }
+
+    fmt.Println(ifResult) // this causes an error! we can't access 'ifResult' here
+                          // because it's declared within the 'if' statement code block
+}</code></pre> 
+  <p>After examining the above code snippet we can see that the program won't compile. This happens because we are trying to print the <code class="language-go">ifResult</code> variable outside of the scope of the <code class="language-go">if</code> statement where it was declared.</p> 
+  <p>Now, let's fix our code by deleting the <code class="language-go">fmt.Println(ifResult)</code> statement at the end of our program, and examine the output:</p> 
+  <pre><code class="language-go">4
+4 is Even</code></pre> 
+  <p>Since we can only access local variables within the scope where they are declared, the only place we'll be able to access the variable <code class="language-go">ifResult</code> is within the <code class="language-go">if</code> statement. Alternatively, the <code class="language-go">number</code> variable can be accessed anywhere within the <code class="language-go">func main()</code> declaration, even within the <code class="language-go">if</code> or the <code class="language-go">else</code> statements.</p> 
+  <h5>Shadowed variables</h5> 
+  <p>If we are not careful when writing our code, we might end up creating two or more variables with the same name and type in our Go program. This will cause us to run into a small issue <em>—</em> <strong>shadowed variables</strong>.</p> 
+  <p>To understand the shadowed variable concept, let's take a look at the following code snippet:</p> 
+  <pre><code class="language-go">package main
+
+import "fmt"
+
+func main() {
+    number := 0
+
+    if true {
+        number := 10
+        number++
+    }
+
+    fmt.Println(number) // 0
+}</code></pre> 
+  <p>You might be wondering: why is the output of the program <code class="language-go">0</code> instead of <code class="language-go">11</code>? This happens because the <code class="language-go">number := 10</code> statement declares a new variable <code class="language-go">number</code>, which shadows the original <code class="language-go">number := 0</code> declaration throughout the scope of the <code class="language-go">if</code> statement.</p> 
+  <p>To fix the code and get the wanted output of <code class="language-go">11</code> we can simply change the line <code class="language-go">number := 10</code> to <code class="language-go">number = 10</code>. With this small change, we wouldn't create a new variable <code class="language-go">number</code> within the <code class="language-go">if</code> statement, and instead we'd update the contents of the local variable <code class="language-go">number</code> created within the <code class="language-go">main</code> function.</p> 
+  <p>To help detect shadowed variables we can use the <code class="language-go">go vet</code> tool. We can install and use it by executing the following commands in our project directory:</p> 
+  <pre><code class="language-bash">$ go get golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow
+$ go vet -vettool=$(which shadow)</code></pre> 
+  <p>After executing the <code class="language-go">go vet -vettool=$(which shadow)</code> command we should get the following output:</p> 
+  <pre><code class="language-go">./main.go:8:3: declaration of "number" shadows declaration at line 6</code></pre> 
+  <p>As you can see, this output helps us easily detect the shadowed variable <code class="language-go">number</code> in our <em>main.go</em> file at line #8 – just at the beginning of the <code class="language-go">if</code> statement.</p> 
+  <h5>Summary</h5> 
+  <p>In this topic, we've learned about the public and private scope in Go, and also about global and local variables. We've covered in detail the following theory:</p> 
+  <ul> 
+   <li>What the public and private scopes of variables are in Go and their key differences.</li> 
+   <li>The differences between public and private <code class="language-go">struct</code> types and <code class="language-go">struct</code> fields.</li> 
+   <li>How to create a global variable and its main characteristics, such as that we can use it anywhere within our Go program.</li> 
+   <li>How to create a local variable, and that its scope is limited depending on where it was declared in the Go program.</li> 
+   <li>What shadowed variables are and how we can find them with the help of the <code class="language-go">go vet</code> tool.</li> 
+  </ul> 
+  <p>Now, to make sure you remember this theory and can implement it in practice, let's work on a few coding and theory problems.</p>
+ </body>
+</html>

@@ -5,3 +5,13 @@ content:
 - Reading files in Go
 - Maps
 - Operations with maps
+- Writing data to files in Go
+- Structs
+- Operations with strings
+- Advanced usage of structs
+- Parsing data from strings
+- String builder
+- Advanced Input
+- Public and private scopes in Go
+- Methods in Go
+- Math package

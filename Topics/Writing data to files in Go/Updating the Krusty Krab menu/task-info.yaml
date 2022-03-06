@@ -1,0 +1,18 @@
+type: code
+files:
+- name: main.go
+  visible: true
+  text: "package main\n\nimport (\n    \"fmt\"\n    \"io\"\n    \"strings\"\n)\n\n\
+    var _ strings.Builder // do not remove this line!\n\nfunc solve(file io.Writer)\
+    \ error {\n\n    // write \"Kelp Shake $2.00\" to the 'file' variable below with\
+    \ the fmt.Fprintln() function\n\n    _, err := fmt.Fprintln(?, \"?\") \n    return\
+    \ err // do not delete this line!\n}"
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/17634#comment
+status: Solved
+feedback:
+  message: "<html>Passed. \n\nWelcome to the Krusty Krab! \U0001f354\U0001f964\U0001f35f\
+    \n\nKrabby Pattie $2.00\nKrusty Combo $3.99\nKrusty Deluxe $3.00\nSeaweed Salad\
+    \ $1.50\nCoral Bits $1.95\nKelp Shake $2.00</html>"
+  time: Fri, 04 Mar 2022 10:07:57 UTC
+record: -1

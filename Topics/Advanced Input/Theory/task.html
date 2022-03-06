@@ -1,0 +1,139 @@
+<h2>Advanced Input</h2>
+<html>
+ <head></head>
+ <body>
+  <p>You already know how to take as an input successive space-separated values into successive arguments with the <code class="language-go">Scan</code> functions from the <code class="language-go">fmt</code> package. But what if you wanted to take as an input an entire <code class="language-go">string</code>, including the whitespaces in it, or maybe only take input until you reach a certain character?</p> 
+  <p>In this topic, we will learn about the <code class="language-go">bufio</code> package: it contains functions that allow us to perform advanced input operations like the ones mentioned above.</p> 
+  <h5 id="taking-input-with-newreader">Taking input with NewReader</h5> 
+  <p>We'll start by creating a <strong>Reader</strong> with the help of the <code class="language-go">bufio.NewReader()</code> function. In simple terms, the <code class="language-go">Reader</code> type contains a buffer with the default size <code class="language-go">4 kB</code> and a reader that allows us to store and read data from it.</p> 
+  <p>To let our program know we'll be taking data from the standard input or <code class="language-go">stdin</code>, we'll need to pass as an argument <code class="language-go">os.Stdin</code> to the <code class="language-go">bufio.NewReader()</code> function.</p> 
+  <p>After creating a <code class="language-go">Reader</code>, the most common functions used to read data are the following:</p> 
+  <ul> 
+   <li><code class="language-go">ReadBytes()</code> — returns a slice of bytes with the data and an error;</li> 
+   <li><code class="language-go">ReadString()</code> — returns a string with the data and an error.</li> 
+  </ul> 
+  <p>Both functions take a specified <strong>delimiter</strong> as an argument, which usually is the newline <code class="language-go">'\n'</code> character, and read data until they reach the specified delimiter. However, we can use other delimiters such as a single rune <code class="language-go">'d'</code> like in the below example:</p> 
+  <pre><code class="language-go">package main
+
+import (
+    "bufio"
+    "fmt"
+    "log"
+    "os"
+)
+
+func main() {
+    reader := bufio.NewReader(os.Stdin)
+
+    b, err := reader.ReadBytes('\n') // Input into 'b': Hello World!\n
+    if err != nil {
+        log.Fatal(err) // Exit if we have an unexpected error
+    }
+    fmt.Println(string(b)) // Output: Hello World!\n
+
+    s, err := reader.ReadString('d') // Input into 's': JetBrains Academy\n
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Println(s) // Output: JetBrains Acad
+}</code></pre> 
+  <p>An important detail regarding the <code class="language-go">ReadBytes()</code> and <code class="language-go">ReadString()</code> functions is that the returned slice of bytes or string includes the specified delimiter — <code class="language-go">HelloWorld!\n</code> includes the <code class="language-go">\n</code>, and <code class="language-go">Jetbrains Acad</code> includes the <code class="language-go">d</code>.</p> 
+  <h5 id="taking-input-with-newscanner">Taking input with NewScanner</h5> 
+  <p>Apart from the previously mentioned <code class="language-go">Reader</code> type, we can also create a <strong>Scanner</strong>. Just like <code class="language-go">Reader</code>, the <code class="language-go">Scanner</code> type contains a buffer of the default size <code class="language-go">4 kB</code> to store data and a reader that allows us to read the stored data from it.</p> 
+  <p>We can create a <code class="language-go">Scanner</code> with the help of the <code class="language-go">NewScanner()</code> function. We will also need to pass <code class="language-go">os.Stdin</code> to <code class="language-go">NewScanner()</code> as an argument — this will let our program know we'll be taking data from the standard input.</p> 
+  <p>The most common usage of a <code class="language-go">Scanner</code> is to read a certain input line by line, for example:</p> 
+  <pre><code class="language-go">...
+
+func main() {
+    scanner := bufio.NewScanner(os.Stdin)
+
+    for scanner.Scan() {
+        line := scanner.Text() // Input: Sheldon Cooper 100 98 Physics\n
+        fmt.Println(line)     // Output: Sheldon Cooper 100 98 Physics
+    }
+}</code></pre> 
+  <p>In the above example, we use a <code class="language-go">for</code> loop with the <code class="language-go">scanner.Scan()</code> function: it scans data line by line with the default <code class="language-go">ScanLines()</code> function.</p> 
+  <p></p>
+  <div class="alert alert-primary">
+   In contrast to the 
+   <code class="language-go">Reader</code> functions, the 
+   <code class="language-go">ScanLines()</code> function does not include the newline character 
+   <code class="language-go">\n</code> in the scanned data.
+  </div>
+  <p></p> 
+  <p>Next, we declare and assign the <code class="language-go">line</code> variable to <code class="language-go">scanner.Text()</code>. The <code class="language-go">Text()</code> helper allows us to access the previously scanned data. Finally, we output the scanned string with the <code class="language-go">fmt.Println(line)</code> statement.</p> 
+  <h5 id="scanning-other-types-of-tokens">Scanning other types of tokens</h5> 
+  <p>The key difference between a <code class="language-go">Scanner</code> and a <code class="language-go">Reader</code> is that a <code class="language-go">Scanner</code> reads data as <strong>tokens</strong> of split lines via the default <code class="language-go">ScanLines()</code> function. However, a <code class="language-go">Scanner</code> can also read data as different types of tokens, such as:</p> 
+  <ul> 
+   <li>Tokens of space-delimited words with <code class="language-go">ScanWords()</code>;</li> 
+   <li>Tokens of UTF-8-encoded runes with <code class="language-go">ScanRunes()</code>;</li> 
+   <li>Tokens of bytes with <code class="language-go">ScanBytes()</code>;</li> 
+   <li>Or we could even create a <strong>custom split function</strong> that only reads a certain type of token, depending on our requirements.</li> 
+  </ul> 
+  <p>Now let's take a look at how we can use a <code class="language-go">Scanner</code> with space-delimited words only:</p> 
+  <pre><code class="language-go">...
+
+func main() {
+    wordScanner := bufio.NewScanner(os.Stdin)
+    // Set the 'Split' function to scan for words (space-delimited tokens):
+    wordScanner.Split(bufio.ScanWords)
+
+    for wordScanner.Scan() { // Input: Among Us ඞ\n
+        fmt.Println(wordScanner.Text())
+    }
+}
+
+// Output:
+// Among
+// Us
+// ඞ</code></pre> 
+  <p>The above example showcases the <code class="language-go">wordScanner</code> that uses the <code class="language-go">ScanWords()</code> function. Take notice that to properly set <code class="language-go">wordScanner</code> to scan for space-delimited word tokens, we need to set the <code class="language-go">Split()</code> function via the <code class="language-go">wordScanner.Split(bufio.ScanWords)</code> statement.</p> 
+  <p>Next, we use a <code class="language-go">for</code> loop with the <code class="language-go">wordScanner.Scan()</code> function. It scans data word by word with the previously set <code class="language-go">ScanWords()</code> function.</p> 
+  <p>Finally, the <code class="language-go">wordScanner</code> outputs each one of the scanned words via the <code class="language-go">fmt.Println(wordScanner.Text())</code> statement.</p> 
+  <h5 id="scanner-with-a-custom-split-function">Scanner with a custom split function</h5> 
+  <p>As previously mentioned, we can also create custom split functions<em> </em>for a <code class="language-go">Scanner</code>. Let's go ahead and create the <code class="language-go">splitBool()</code> function, which validates <code class="language-go">bool</code> type input only:</p> 
+  <pre><code class="language-go">// The custom 'splitBool' function validates `bool` type input only:
+func splitBool(data []byte, atEOF bool) (advance int, token []byte, err error) {
+    advance, token, err = bufio.ScanWords(data, atEOF)
+    if err == nil &amp;&amp; token != nil {
+        _, err = strconv.ParseBool(string(token))
+    }
+    return
+}</code></pre> 
+  <p><code class="language-go">splitBool()</code> takes two arguments: <code class="language-go">data</code> — a slice of bytes that contains the data to be scanned, and <code class="language-go">atEOF</code>, a <code class="language-go">bool</code> type that indicates whether the data is at the end of the file.</p> 
+  <p>Additionally, it returns three values: <code class="language-go">advance</code> that contains the number of bytes scanned, <code class="language-go">token</code> — a slice of bytes containing the words scanned, and <code class="language-go">err</code> that contains any error encountered.</p> 
+  <p>Within the body of <code class="language-go">splitBool()</code>, we set <code class="language-go">advance</code>, <code class="language-go">token</code>, and <code class="language-go">err</code> as the return values of the <code class="language-go">bufio.ScanWords()</code> function and pass <code class="language-go">data</code> and <code class="language-go">atEOF</code> as arguments to it. Next, we validate that there aren't any errors and that the scanned <code class="language-go">token</code> is not <code class="language-go">nil</code> within the <code class="language-go">if</code> statement. After passing this validation, we attempt to parse the scanned token as a <code class="language-go">bool</code> value.</p> 
+  <p>Now let's go ahead and use <code class="language-go">splitBool()</code> within our Go program:</p> 
+  <pre><code class="language-go">...
+
+func main() {
+    scanner := bufio.NewScanner(os.Stdin)
+    // Set 'splitBool' as the split function for the scanning operation
+    scanner.Split(splitBool)
+
+    for scanner.Scan() {
+        fmt.Println(scanner.Text())
+    }
+    if err := scanner.Err(); err != nil {
+        log.Fatal(err) // Exit if the scanned value is not a 'bool'
+    }
+}
+
+// Input: true false Hello World!
+// Output:
+// true
+// false
+// 2022/02/24 23:02:04 strconv.ParseBool: parsing "Hello": invalid syntax</code></pre> 
+  <p>After creating a new <code class="language-go">scanner</code> and setting it to take data from the standard input, the most important part is setting <code class="language-go">splitBool</code> as the split function of the <code class="language-go">scanner</code>.</p> 
+  <p>Finally, the program outputs the scanned <code class="language-go">bool</code> value; however, the program will keep scanning for data until the scanned value is not of the <code class="language-go">bool</code> type. When this happens, the program will return an error and exit instead.</p> 
+  <h5 id="summary">Summary</h5> 
+  <p>In this topic, we have learned how to use the <code class="language-go">Reader</code> and <code class="language-go">Scanner</code> types from the <code class="language-go">bufio</code> package to take input in an advanced way. We've also learned the key differences between a <code class="language-go">Reader</code> and a <code class="language-go">Scanner</code> as well as what the most common functions are that we can use to take input with both types, respectively.</p> 
+  <p>To sum up:</p> 
+  <ul> 
+   <li>The key difference between a <code class="language-go">Scanner</code> and a <code class="language-go">Reader</code> is that a <code class="language-go">Scanner</code> reads data as tokens of split lines by default, but can also read data as tokens of different data types.</li> 
+   <li>The most common functions that a <code class="language-go">Reader</code> uses to read data are <code class="language-go">ReadBytes()</code> and <code class="language-go">ReadString()</code>; both functions take a specified delimiter as an argument and read data until they reach the specified delimiter.</li> 
+   <li>Apart from reading data as tokens of split lines, a <code class="language-go">Scanner</code> can also read data as tokens of space-delimited words with <code class="language-go">ScanWords()</code>, tokens of UTF-8 runes with <code class="language-go">ScanRunes()</code>, tokens of bytes with <code class="language-go">ScanBytes()</code>, and we can even create a custom split function to make our <code class="language-go">Scanner</code> read and validate only a certain type of token.</li> 
+  </ul> 
+  <p>This sure was a long topic! However, we're not done yet; it's time to test our knowledge and solve some theory and coding tasks to make sure we've learned how to properly use a <code class="language-go">Reader</code> and a <code class="language-go">Scanner</code>, along with their functions included in the <code class="language-go">bufio</code> package.</p>
+ </body>
+</html>

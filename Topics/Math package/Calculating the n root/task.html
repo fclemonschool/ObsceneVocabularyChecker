@@ -1,0 +1,25 @@
+<h2>Calculating the n root</h2>
+<html>
+ <head></head>
+ <body>
+  <p>You already know that the math package has the <code class="java">math.Sqrt()</code> and <code class="java">math.Cbrt()</code> functions to calculate the square and cube roots of <code class="java">float64</code> types; but what if we needed to calculate the <code class="java">n</code> root of a number?</p> 
+  <p>Create a Go program that takes as an input two numbers as variables: the <code class="java">num</code> you will calculate the root of, and the <code class="java">n</code> root you want to calculate. Then, after calculating the <code class="java">n</code> root, print the output with two decimals.</p> 
+  <p></p>
+  <div class="alert alert-primary">
+   The first hint to solve this task is that you can use the 
+   <code class="java">math.Pow()</code> function to calculate the 
+   <code class="java">n</code> root of any number... in case you don't know yet how to use the 
+   <code class="java">math.Pow()</code> function to do this, you may use the second hint below.
+  </div>
+  <p></p> 
+  <p><button class="btn-sm btn-outline-secondary" onclick="getElementById('hint-904').style.display='inline'"> Hint </button> </p>
+  <div id="hint-904" style="display:none;">
+   We can easily calculate the 
+   <code class="java">n</code> root of 
+   <code class="java">num</code> raising it to the power of 
+   <code class="java">1/n</code> with the help of the 
+   <code class="java">math.Pow()</code> function
+  </div>
+  <p></p>
+ </body>
+</html><br><b>Sample Input:</b><br><pre><code class="language-no-highlight">32768<br>5</code></pre><br><b>Sample Output:</b><br><pre><code class="language-no-highlight">8.00</code></pre><br><br><br><font color="gray">Memory limit: 256 MB</font><br><font color="gray">Time limit: 8 seconds</font><br><br>

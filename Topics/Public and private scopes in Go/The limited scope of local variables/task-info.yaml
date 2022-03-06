@@ -1,0 +1,18 @@
+type: choice
+is_multiple_choice: true
+options:
+- text: Within the entire <code>if...else-if...else</code> statement.
+- text: Within the entire <code>for</code> statement.
+- text: Within the entire <code>func main()</code> statement.
+message_correct: Congratulations!
+message_incorrect: Incorrect solution
+files:
+- name: main.go
+  visible: true
+  text: |+
+    // You can experiment here, it won’t be checked
+
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/17521#comment
+status: Solved
+record: -1

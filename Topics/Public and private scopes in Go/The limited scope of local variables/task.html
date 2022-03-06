@@ -1,0 +1,32 @@
+<h2>The limited scope of local variables</h2>
+<html>
+ <head></head>
+ <body>
+  <p>Below you will see the code of a Go program. Please select in what code blocks/statements the local variable <code class="language-go">food</code> can be accessed:</p> 
+  <pre><code class="language-go">package main
+
+import "fmt"
+
+func main() {
+    for {
+        var food string
+        fmt.Println("Hello! please enter an emoji of any food type:")
+        fmt.Scanln(&amp;food)
+
+        if food == "🍏" {
+            fmt.Println(food, "belongs to the FRUIT group!")
+            break
+        } else if food == "🥦" {
+            fmt.Println(food, "belongs to the VEGETABLE group!")
+            break
+        } else if food == "🍖" {
+            fmt.Println(food, "belongs to the MEAT group!")
+            break
+        } else {
+            fmt.Println(food, "is not food!")
+            break
+        }
+    }
+}</code></pre>
+ </body>
+</html>

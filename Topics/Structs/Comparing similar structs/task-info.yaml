@@ -1,0 +1,19 @@
+type: choice
+is_multiple_choice: false
+options:
+- text: <code>sodium1</code> and <code>sodium</code> are equal.
+- text: <code>sodium2</code> and <code>sodium</code> are equal.
+- text: <code>sodium3</code> and <code>sodium</code> are equal.
+- text: None of the structs are equal to the original <code>sodium</code> struct.
+message_correct: Congratulations!
+message_incorrect: Incorrect solution
+files:
+- name: main.go
+  visible: true
+  text: |+
+    // You can experiment here, it won’t be checked
+
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/17493#comment
+status: Solved
+record: -1

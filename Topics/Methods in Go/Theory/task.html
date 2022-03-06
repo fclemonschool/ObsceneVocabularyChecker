@@ -1,0 +1,148 @@
+<h2>Methods in Go</h2>
+<html>
+ <head></head>
+ <body>
+  <p>We've previously learned about functions in Go, and know that they allow us to organize code into repeatable procedures. These procedures can take and process different arguments each time we execute them.</p> 
+  <p>In this topic, we'll learn about a special function type that we can implement on both <code class="language-go">struct</code> and non-struct types.</p> 
+  <h5>What is a method?</h5> 
+  <p>In brief, a <strong>method</strong> is a function with a defined <strong>receiver</strong> argument. The receiver appears in its argument list between the <code class="language-go">func</code> keyword and the method name.</p> 
+  <p>Since Go doesn't have classes like other Object-Oriented programming languages, methods are usually defined on <code class="language-go">struct</code> types; however, we can define them on non-struct types, too!</p> 
+  <p>Now let's go ahead and take a look at an example that creates a method on the <code class="language-go">User</code> struct and calls it:</p> 
+  <pre><code class="language-go">package main
+
+import "fmt"
+
+type User struct {
+    FirstName, LastName, Email string
+}
+
+// DisplayUserInfo method definition on the 'User' struct type:
+func (u User) DisplayUserInfo() string {
+    return fmt.Sprintf("%s %s email is: %s", u.FirstName, u.LastName, u.Email)
+}
+
+func main() {
+    spongebob := User{
+        FirstName: "SpongeBob",
+        LastName:  "SquarePants",
+        Email:     "spongebob@krustykrab.bb",
+    }
+
+    fmt.Println(spongebob.DisplayUserInfo()) // here we call and print the method
+}
+
+// Output:
+// SpongeBob SquarePants email is: spongebob@krustykrab.bb</code></pre> 
+  <p>The syntax for defining a method is very similar to the syntax for defining a function. The key difference is the addition of an extra parameter <code class="language-go">(u User)</code> after the <code class="language-go">func</code> keyword for specifying the receiver of the method. In very simple terms, the receiver is a declaration of the type that we decide to define the method on; in this case, we define it on a <code class="language-go">struct</code> type: <code class="language-go">User</code>.</p> 
+  <p>After defining the method, we create an instance of the <code class="language-go">User</code> type within the <code class="language-go">spongebob</code> variable, and then we can simply call the method using the <code class="language-go">.</code> dot operator via the <code class="language-go">spongebob.DisplayUserInfo()</code> syntax.</p> 
+  <p></p>
+  <div class="alert alert-primary">
+   Take notice that Go provides another way to call methods: We write the type first, then the method, and finally pass the instance of the type as an argument:
+   <p></p> 
+   <pre><code class="language-go">func main() {
+    ...
+
+    fmt.Println(User.DisplayUserInfo(spongebob)) // another way to call and print the method
+}</code></pre> 
+   <p></p>
+  </div>
+  <p></p> 
+  <h5>Defining methods on non-struct types</h5> 
+  <p>We can also define methods on non-struct types, as long as the type and the method definitions are present in the same package<em>.</em></p> 
+  <p>Let's take a look at the implementation of a method in two custom numeric types <code class="language-go">SquareSide</code> and <code class="language-go">CircleRadius</code>:</p> 
+  <pre><code class="language-go">package main
+
+import (
+    "fmt"
+    "math"
+)
+
+type SquareSide float64 // 'SquareSide' is a non-struct type!
+
+type CircleRadius float64 // 'CircleRadius' is a non-struct type!
+
+// Area method definition on a non-struct type:
+func (s SquareSide) Area() float64 {
+    return math.Pow(float64(s), 2)
+}
+
+// Area method with the same name on a different type:
+func (c CircleRadius) Area() float64 {
+    return math.Pi * math.Pow(float64(c), 2)
+}
+
+func main() {
+    s := SquareSide(1.219)
+    fmt.Printf("Area of square ⏹️: %.3f\n", s.Area())
+
+    c := CircleRadius(2.438)
+    fmt.Printf("Area of circle ⭕: %.3f", c.Area())
+}
+
+// Output:
+// Area of square ⏹️: 1.486
+// Area of circle ⭕: 18.673</code></pre> 
+  <p>Another interesting detail is that we can define methods with the same name on different types. As you can see in the above code, we can define the <code class="language-go">Area()</code> method on both <code class="language-go">SquareSide</code> and <code class="language-go">CircleArea</code> types. This is one of the key differences between methods and standard Go functions.</p> 
+  <h5>Methods with pointer receivers</h5> 
+  <p>The previous examples have showcased methods with <strong>value receivers</strong>; but besides them, we can also create methods with <strong>pointer receivers</strong>.</p> 
+  <p>When we create a method with a pointer receiver, all the changes made within it are visible to the caller. This is the key difference between methods with value receivers and methods with pointer receivers.</p> 
+  <p>To better understand the concept of methods with pointer receivers, let's take a look at the following example:</p> 
+  <pre><code class="language-go">package main
+
+import "fmt"
+
+type Animal struct {
+    Name, Emoji string
+}
+
+// UpdateEmoji method definition with pointer receiver '*Animal':
+func (a *Animal) UpdateEmoji(emoji string) {
+    a.Emoji = emoji
+}
+
+func main() {
+    monkey := Animal{
+        Name:  "Monkey",
+        Emoji: "🐒",
+    }
+
+    fmt.Printf("Monkey's emoji (Before): %s\n", monkey.Emoji)
+    monkey.UpdateEmoji("🙉")
+    fmt.Printf("Monkey's emoji (After): %s\n", monkey.Emoji)
+}
+
+// Output:
+// Monkey's emoji (Before): 🐒
+// Monkey's emoji (After): 🙉</code></pre> 
+  <p>Methods with pointer receivers can modify the value to which the receiver points, as <code class="language-go">UpdateEmoji()</code> does in the above example. Since methods often need to modify their receiver, pointer receivers are more commonly used than value receivers.</p> 
+  <p></p>
+  <div class="alert alert-primary">
+   Take notice that since we declared 
+   <code class="language-go">UpdateEmoji()</code> with a pointer receiver, it is not required to use the 
+   <code class="language-go">&amp;</code> operator before the 
+   <code class="language-go">monkey</code> variable. Go will automatically interpret the 
+   <code class="language-go">monkey.UpdateEmoji(...)</code> call as 
+   <code class="language-go">(&amp;monkey).UpdateEmoji(...)</code>.
+  </div>
+  <p></p> 
+  <h5>Deciding over value or pointer receivers</h5> 
+  <p>Now that we've seen both value and pointer receivers, you might be thinking: "What type of receiver should I implement for the methods in my Go program?"</p> 
+  <p>There are two valid reasons to use a pointer receiver:</p> 
+  <ul> 
+   <li>The first is so that our method can modify the value that its receiver points to.</li> 
+   <li>The second is to avoid copying the value on each method call. This tends to be more efficient if the receiver is a large struct with many fields, for example, a struct that holds a <a target="_blank" href="https://jsonformatter.org/json-pretty-print/9acdc0" rel="noopener noreferrer nofollow">large JSON response</a>.</li> 
+  </ul> 
+  <p>Now let's look in more detail at the use case of pointer receivers and focus on the large struct case described above. In this case, the large struct will not be copied and only a pointer to it will be used in the method, making it more memory efficient.</p> 
+  <p>In all other cases we may use value receivers; however, remember that value receivers will not allow us to modify the value that its receiver points to.</p> 
+  <h5>Summary</h5> 
+  <p>In this topic, we've learned about methods: a special type of function that requires a defined receiver argument that can be either of a <code class="language-go">struct</code> or a non-struct type.</p> 
+  <p>We've covered the following theory about methods:</p> 
+  <ul> 
+   <li>What methods are, and the most basic implementation of methods onto <code class="language-go">struct</code> types.</li> 
+   <li>How to define methods on<em> </em>non-struct types, as long as the non-struct type and method definitions are contained within the same package.</li> 
+   <li>Implementing methods with pointer receivers that allow us to modify the value that its receiver points to.</li> 
+   <li>The <em>key </em>differences between value and pointer receivers, and how to decide when we should use either value or pointer receivers for the methods in our Go program.</li> 
+  </ul> 
+  <p>Now, to make sure you remember the theory and know how to implement methods to <code class="language-go">struct</code> and non-struct types in your future Go programs, let's work on a few coding and theory problems.</p>
+ </body>
+</html>

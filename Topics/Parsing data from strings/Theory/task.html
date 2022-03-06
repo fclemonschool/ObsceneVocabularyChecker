@@ -1,0 +1,195 @@
+<h2>Parsing data from strings</h2>
+<html>
+ <head></head>
+ <body>
+  <p>Today we continue learning about Strings in Go and will find out how to <strong>parse</strong> data from strings.</p> 
+  <p>In very simple terms, parsing data means that we take some raw data (in this case, we take it from a string), and then we put a specific meaning into the data (we convert it to its respective type).</p> 
+  <p>In this topic, we'll learn how to parse data such as <code class="language-go">int</code>, <code class="language-go">float64</code>, and <code class="language-go">bool</code> type values from string values or variables and then convert them to their respective types with the help of the <code class="language-go">strconv</code> package.</p> 
+  <h5>Parsing integer numbers from strings</h5> 
+  <p>Suppose we have a string that contains integer numeric values; we can easily parse this data and convert it to an <code class="language-go">int</code> type with the <code class="language-go">strconv.Atoi()</code> function:</p> 
+  <pre><code class="language-go">package main
+
+import (
+    "fmt"
+    "log"
+    "strconv"
+)
+
+func main() {
+    num := "123" // 'num' contains a string of integer numbers
+
+    fmt.Printf("Initial type: %T | value: %v\n", num, num)
+    val, err := strconv.Atoi(num) // We save the converted value in the 'val' variable
+    if err != nil {
+        log.Fatal(err) // Exit if we have an error
+    }
+    fmt.Printf("Converted type: %T  | value: %v", val, val)
+}
+
+// Output:
+// Initial type: string | value: 123
+// Converted type: int  | value: 123</code></pre> 
+  <p>The <code class="language-go">strconv.Atoi()</code> function returns two values: the result of the conversion to the <code class="language-go">int</code> type, and an error if there is any. The <strong>Atoi</strong> acronym stands for "ASCII to integer", and it is a convenient function to convert base-10 integer numbers.</p> 
+  <p>Another function that we can implement to convert strings to <code class="language-go">int</code> types is the <code class="language-go">strconv.ParseInt()</code> function. It takes as arguments the string that contains the integer value, the base of the number, and finally the bitSize:</p> 
+  <pre><code class="language-go">...
+
+func main() {
+    num := "123"
+
+    fmt.Printf("Initial type: %T   | value: %v\n", num, num)
+    val, err := strconv.ParseInt(num, 10, 64)
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Printf("Converted type: %T  | value: %v", val, val)
+}
+
+// Output:
+// Initial type: string   | value: 123
+// Converted type: int64  | value: 123</code></pre> 
+  <p>After passing the <code class="language-go">num</code> variable to the <code class="language-go">strconv.ParseInt()</code> function, we pass <code class="language-go">10</code> as the base argument. This informs the function that we are working with base-10 integer values.</p> 
+  <p>The last argument we pass is the bitSize; it specifies the integer type that the result must fit into. Bit sizes 0, 8, 16, 32, and 64 correspond to <code class="language-go">int</code>, <code class="language-go">int8</code>, <code class="language-go">int16</code>, <code class="language-go">int32</code>, and <code class="language-go">int64</code> values, respectively.</p> 
+  <p></p>
+  <div class="alert alert-primary">
+   Take notice that the equivalent of the 
+   <code class="language-go">Atoi()</code> function, if we were to express it using the 
+   <code class="language-go">ParseInt()</code> function, would be: 
+   <code class="language-go">strconv.ParseInt(string, 10, 0)</code>, since 
+   <code class="language-go">Atoi()</code> is a convenient function to convert base-10 integer values.
+  </div>
+  <p></p> 
+  <h5>Parsing float numbers from strings</h5> 
+  <p>We can also convert float numeric values with the <code class="language-go">strconv.ParseFloat()</code> function:</p> 
+  <pre><code class="language-go">...
+
+func main() {
+    num := "3.1416" // 'num' contains a string of floating point numbers
+
+    fmt.Printf("Initial type: %T | value: %v\n", num, num)
+    val, err := strconv.ParseFloat(num, 64)
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Printf("Converted type: %T  | value: %v", val, val)
+}
+
+// Output:
+// Initial type: string | value: 3.1416
+// Converted type: int  | value: 3.1416</code></pre> 
+  <p>The <code class="language-go">strconv.ParseFloat()</code> function takes two arguments: the string that contains the float number and the<em> </em>bitSize — either 32 for <code class="language-go">float32</code> or 64 for <code class="language-go">float64</code> values.</p> 
+  <p>Take notice that when the bitSize is 32, the returned conversion still has type <code class="language-go">float64</code>; however, it will be convertible to <code class="language-go">float32</code> without changing its value.</p> 
+  <p>Another important detail is that the <code class="language-go">strconv.ParseFloat()</code> function recognizes the strings "NaN" (not a number), and the possibly signed strings "Inf" and "Infinity" as their respective special floating-point values:</p> 
+  <pre><code class="language-go">...
+
+func main() {
+    if val, err := strconv.ParseFloat("NaN", 32); err == nil {
+        fmt.Printf("Type: %T | value: %v\n", val, val)
+    }
+
+    if val, err := strconv.ParseFloat("Infinity", 32); err == nil {
+        fmt.Printf("Type: %T | value: %v\n", val, val)
+    }
+}
+
+// Output:
+// Type: float64 | value: NaN
+// Type: float64 | value: +Inf</code></pre> 
+  <h5>Converting numeric values to strings</h5> 
+  <p>We've previously seen how to convert numeric values contained in strings to integer and float types. However, we can also perform inverse operations: converting <code class="language-go">int</code> or <code class="language-go">float64</code> values to a string.</p> 
+  <p>Let's take a look at converting an <code class="language-go">int</code> to a string value first:</p> 
+  <pre><code class="language-go">...
+
+func main() {
+    num := 456 // 'num' contains an integer value
+
+    fmt.Printf("Initial type: %T       | value: %v\n", num, num)
+    val := strconv.Itoa(num) // Converts 'num' to a string and assigns it to 'val'
+    fmt.Printf("Converted type: %T  | value: %v", val, val)
+}
+
+// Output:
+// Initial type: int       | value: 456
+// Converted type: string  | value: 456</code></pre> 
+  <p>The <code class="language-go">strconv.Itoa()</code> function is very simple: it takes an <code class="language-go">int</code> type variable and simply returns the converted value as a string. The <strong>Itoa</strong> acronym stands for "Integer to ASCII".</p> 
+  <p>Now let's see how to convert a <code class="language-go">float64</code> to a string value using the <code class="language-go">strconv.FormatFloat()</code> function:</p> 
+  <pre><code class="language-go">...
+
+func main() {
+    num := 3.1415926535
+
+    fmt.Printf("Initial type: %T   | value: %v\n", num, num)
+    val := strconv.FormatFloat(num, 'f', -1, 32)
+    fmt.Printf("Converted type: %T  | value: %v\n\n", val, val)
+
+    fmt.Printf("Initial type: %T   | value: %v\n", num, num)
+    val = strconv.FormatFloat(num, 'f', -1, 64)
+    fmt.Printf("Converted type: %T  | value: %v", val, val)
+}
+
+// Output:
+// Initial type: float64   | value: 3.1415926535
+// Converted type: string  | value: 3.1415927
+
+// Initial type: float64   | value: 3.1415926535
+// Converted type: string  | value: 3.1415926535</code></pre> 
+  <p>The <code class="language-go">strconv.FormatFloat()</code> is a bit more complex. It takes four arguments: the <code class="language-go">float64</code> type variable we want to convert, the formatting type, the precision control, and finally, the bitSize.</p> 
+  <p>In the above example, we use the most basic formatting type: <code class="language-go">'f'</code> for no exponents. For the precision control, we use the special value <code class="language-go">-1</code> that uses the smallest number of digits necessary such that <code class="language-go">ParseFloat</code> returns <code class="language-go">'f'</code> exactly.</p> 
+  <p></p>
+  <div class="alert alert-warning">
+   Please take notice that there are many other formatting types, you can take a look at them in the official 
+   <code class="language-go">strconv.FormatFloat()</code> 
+   <a target="_blank" href="https://pkg.go.dev/strconv#FormatFloat" rel="noopener noreferrer nofollow">documentation</a>.
+  </div>
+  <p></p> 
+  <h5>Parsing boolean values from strings</h5> 
+  <p>So far we've seen how to parse <code class="language-go">int</code> and <code class="language-go">float64</code> values from strings. Now let's take a look at how to parse <code class="language-go">bool</code> values contained in strings using the <code class="language-go">strconv.ParseBool()</code> function.</p> 
+  <p>The <code class="language-go">strconv.ParseBool()</code> function takes a string containing a <code class="language-go">bool</code> value as an argument and returns the boolean value represented by the string, as well as an error if there is any:</p> 
+  <pre><code class="language-go">...
+
+func main() {
+    b := "false"
+
+    fmt.Printf("Initial type: %T  | value: %v\n", b, b)
+    val, err := strconv.ParseBool(b)
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Printf("Converted type: %T  | value: %v\n\n", val, val)
+}
+
+// Output:
+// Initial type: string  | value: false
+// Converted type: bool  | value: false</code></pre> 
+  <p></p>
+  <div class="alert alert-primary">
+   An important detail regarding the 
+   <code class="language-go">strconv.ParseBool()</code> function is that it only accepts the following string values: 1, t, T, TRUE, true, True, 0, f, F, FALSE, false, False. Any other string value returns an error!
+  </div>
+  <p></p> 
+  <p>We can also perform the inverse operation: converting a <code class="language-go">bool</code> type to a string with the help of the <code class="language-go">strconv.FormatBool()</code> function:</p> 
+  <pre><code class="language-go">...
+
+func main() {
+    b := false
+
+    fmt.Printf("Initial type: %T      | value: %v\n", b, b)
+    val := strconv.FormatBool(b)
+    fmt.Printf("Converted type: %T  | value: %v\n\n", val, val)
+}
+
+// Output:
+// Initial type: bool      | value: false
+// Converted type: string  | value: false</code></pre> 
+  <p>Take notice that the <code class="language-go">strconv.FormatBool()</code> function only accepts boolean values. Therefore, we will only be able to pass either <code class="language-go">true</code> or <code class="language-go">false</code> values to it. Any other values we pass will cause an error.</p> 
+  <h5>Summary</h5> 
+  <p>In this topic, we've learned how to parse data from strings and convert it to their respective type with the help of the <code class="language-go">strconv</code> package.</p> 
+  <p>In particular, we've covered the following theory:</p> 
+  <ul> 
+   <li>How to parse <code class="language-go">int</code> type values from strings with the <code class="language-go">strconv.Atoi()</code> and the <code class="language-go">strconv.ParseInt()</code> functions.</li> 
+   <li>How to parse <code class="language-go">float64</code> type values from strings with the <code class="language-go">strconv.ParseFloat()</code> function.</li> 
+   <li>How to parse a specific list of <code class="language-go">bool</code> type values from strings with the <code class="language-go">strconv.ParseBool()</code> function.</li> 
+   <li>That we can also perform the inverse operation — convert <code class="language-go">int</code>, <code class="language-go">float64</code> and even <code class="language-go">bool</code> type values with the <code class="language-go">strconv.Itoa()</code>, <code class="language-go">strconv.FormatFloat()</code> and <code class="language-go">strconv.FormatBool()</code> functions, respectively.</li> 
+  </ul> 
+  <p>Congratulations that you've made it this far! Let's solve some theory and coding tasks now to make sure we've learned the most important details regarding parsing data from strings.</p>
+ </body>
+</html>

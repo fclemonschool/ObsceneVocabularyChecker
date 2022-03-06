@@ -1,0 +1,24 @@
+type: code
+files:
+- name: main.go
+  visible: true
+  text: "package main\n\nimport \"fmt\"\n\ntype Gesture struct {\n\tName, Emoji string\n\
+    }\n\n// Update method with a pointer receiver to update 'Gesture' struct fields\n\
+    func (? ?) Update(name, emoji string) {\n\t? = ?\n\t? = ?\n}\n\nfunc main() {\n\
+    \t// Do not change the contents of the 'g' struct!\n\tg := Gesture{\n\t\tName:\
+    \  \"OK-Hand\",\n\t\tEmoji: \"\U0001f44c\",\n\t}\n\n\tfmt.Printf(\"The current\
+    \ gesture is: %s %s\\n\", g.Name, g.Emoji)\n\n\t// Call the Update() method on\
+    \ the 'g' struct and pass \"Thumbs-Up\" and \"\U0001f44d\" as arguments below:\n\
+    \    // you may copy and paste the \"\U0001f44d\" emoji so its easier!\n\tg.?(?,\
+    \ ?)\n\n\tfmt.Printf(\"The updated gesture is: %s %s\\n\", g.Name, g.Emoji)\n}"
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/17744#comment
+status: Solved
+feedback:
+  message: |-
+    <html>Well done! Emma 👩‍🔬💻 says thanks!
+
+    The current gesture is: OK-Hand 👌
+    The updated gesture is: Thumbs-Up 👍</html>
+  time: Sun, 06 Mar 2022 12:58:00 UTC
+record: -1

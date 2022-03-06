@@ -1,0 +1,29 @@
+<h2>Comparing similar structs</h2>
+<html>
+ <head></head>
+ <body>
+  <p>Professor Ross Geller has been learning about Go structures and has created a program to help him classify <a target="_blank" href="https://en.wikipedia.org/wiki/Chemical_element" rel="noopener noreferrer nofollow">chemical elements</a> with the <code class="language-go">Element</code> struct. It contains the <code class="language-go">Name</code>, <code class="language-go">Symbol</code>, and <code class="language-go">AtomicNumber</code> fields.</p> 
+  <p>By accident, Professor Geller has created one too many <code class="language-go">sodium</code> structs of the Element type! Some of these structs are missing values on their fields. Can you help Ross identify<em> </em>and<em> </em>select which one of these structs is equal to the original <code class="language-go">sodium</code> struct? Below you will see the structs created within his program:</p> 
+  <pre><code class="language-go">package main
+
+type Element struct {
+    Name         string
+    Symbol       string
+    AtomicNumber int
+}
+
+func main() {
+   // below is the original 'sodium' struct
+    sodium := Element{
+        Name:         "Sodium",
+        Symbol:       "Na",
+        AtomicNumber: 11,
+    }
+
+    // below are the various copies of 'sodium' Professor Ross created!
+    sodium1 := Element{Name: "Sodium", Symbol: "Na"}
+    sodium2 := Element{Name: "Sodium", Symbol: "Na", AtomicNumber: 11}
+    sodium3 := Element{Symbol: "Na", AtomicNumber: 11}  
+}</code></pre>
+ </body>
+</html>

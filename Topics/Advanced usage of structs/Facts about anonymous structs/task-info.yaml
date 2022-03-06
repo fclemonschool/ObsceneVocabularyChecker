@@ -1,0 +1,26 @@
+type: choice
+is_multiple_choice: true
+options:
+- text: Anonymous structs are most commonly used to program table-driven unit tests
+- text: After declaring an anonymous struct, we will have a new struct data type within
+    our Go program
+- text: An anonymous struct must be followed by a struct literal that initializes
+    its fields
+message_correct: Congratulations!
+message_incorrect: Incorrect solution
+files:
+- name: main.go
+  visible: true
+  text: |+
+    // You can experiment here, it won’t be checked
+
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/17505#comment
+status: Solved
+feedback:
+  message: <html>Correct solution</html>
+  time: Sat, 05 Mar 2022 16:10:48 UTC
+record: -1
+selected_options:
+- 0
+- 2

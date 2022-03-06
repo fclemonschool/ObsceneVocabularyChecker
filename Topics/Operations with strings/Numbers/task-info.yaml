@@ -1,0 +1,20 @@
+type: choice
+is_multiple_choice: false
+options:
+- text: fmt
+- text: strings
+- text: text
+- text: string
+message_correct: Congratulations!
+message_incorrect: Incorrect solution
+files:
+- name: main.go
+  visible: true
+  text: |+
+    // You can experiment here, it won’t be checked
+
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/18550#comment
+status: Solved
+record: -1
+custom_name: Numbers?

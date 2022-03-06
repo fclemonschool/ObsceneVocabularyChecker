@@ -1,0 +1,18 @@
+type: code
+files:
+- name: main.go
+  visible: true
+  text: "package main\n\nimport (\n\t\"fmt\"\n\t\"math\"\n)\n\nfunc main() {\n   \
+    \ // Do not change the type of the variables from 'float64' to 'int'\n\tvar totalQuestions\
+    \ float64\n\tfmt.Scanln(&totalQuestions)\n\n\tvar correctAnswers float64\n\tfmt.Scanln(&correctAnswers)\n\
+    \n    // Please write the grading formula within the 'score' variable below:\n\
+    \tscore := ? / ? * ?\n\n    // What function from the math package allows us\n\
+    \    // to either round up or down based on the decimal numbers?\n\tscore = math.?(score)\n\
+    \n\tfmt.Println(score)\n}"
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/18437#comment
+status: Solved
+feedback:
+  message: <html>Correct solution</html>
+  time: Sun, 06 Mar 2022 13:25:12 UTC
+record: -1

@@ -1,0 +1,21 @@
+type: code
+files:
+- name: main.go
+  visible: true
+  text: "package main\n\nimport (\n\t\"bufio\"\n\t\"fmt\"\n\t\"os\"\n\t\"strings\"\
+    \n)\n\nfunc main() {\n\tvar b strings.Builder\n\n    // The 'scanner' lines below\
+    \ allow us to read a string separated by whitespaces do not delete them!\n\tscanner\
+    \ := bufio.NewScanner(os.Stdin)\n\tscanner.Scan()\n\tstr1 := scanner.Text()\n\t\
+    scanner.Scan()\n\tstr2 := scanner.Text()\n\n\tb.WriteString(str1)\n\tb.WriteString(str2)\n\
+    \n\t// What is the missing method call required to print the concatenated string?\n\
+    \tfmt.Println(?)\n}"
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/18081#comment
+status: Solved
+feedback:
+  message: "<html>Well done! Patrick ⭐ says thanks! \n\nOutput of Test #1:\nIs mayonnaise\
+    \ an instrument? \U0001f3ba I can't see my forehead! \U0001f633\n\nOutput of Test\
+    \ #2:\nThe inner machinations of my mind \U0001f9e0 are an enigma. I can't hear\
+    \ you, it's too dark in here!</html>"
+  time: Sun, 06 Mar 2022 08:45:08 UTC
+record: -1

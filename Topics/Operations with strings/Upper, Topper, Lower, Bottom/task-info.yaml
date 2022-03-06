@@ -1,0 +1,20 @@
+type: choice
+is_multiple_choice: true
+options:
+- text: <code>strings.ToLower(word)</code>
+- text: <code>case.Bottom(word)</code>
+- text: <code>strings.ToUpper(word)</code>
+- text: <code>case.Topper(word)</code>
+message_correct: Congratulations!
+message_incorrect: Incorrect solution
+files:
+- name: main.go
+  visible: true
+  text: |+
+    // You can experiment here, it won’t be checked
+
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/18549#comment
+status: Solved
+record: -1
+custom_name: Upper, Topper, Lower, Bottom...

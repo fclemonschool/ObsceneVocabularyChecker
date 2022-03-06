@@ -1,0 +1,118 @@
+<h2>Operations with strings</h2>
+<html>
+ <head></head>
+ <body>
+  <p>The Standard library in Go has many handy packages. In this topic, we are going to explore the <code class="language-go">strings</code> package, especially its part concerning modification and splitting operations.</p> 
+  <h5 style="text-align: center;" id="changing-case-of-a-string">Changing case of a string</h5> 
+  <p>Package <code class="language-go">strings</code> implements simple functions to manipulate UTF-8 encoded strings. To start using this package, we need to import it to the current file:</p> 
+  <pre><code class="language-go">import "strings"</code></pre> 
+  <p>One of the basic operations with strings is changing its case. When working with a string, you may need to carry out some operations with it disregarding its case. Hence, it's convenient to convert a string to lower or upper case. To map the characters of a given string to the lower case, we can use the <code class="language-go">strings.ToLower</code> function:</p> 
+  <pre><code class="language-go">func ToLower(s string) string</code></pre> 
+  <p>For example:</p> 
+  <pre><code class="language-go">question := "What Does The Fox Say?"
+fmt.Println(strings.ToLower(question))
+
+// Output:
+// what does the fox say?</code></pre> 
+  <p>To map characters of a string to the upper case, use the <code class="language-go">ToUpper</code> function:</p> 
+  <pre><code class="language-go">DIO := "miete iru no ka to kie te iru no da, jotaro?\nkono dio da!"
+fmt.Println(strings.ToUpper(DIO))
+
+// Output:
+// MIETE IRU NO KA TO KIE TE IRU NO DA, JOTARO?
+// KONO DIO DA!</code></pre> 
+  <h5 style="text-align: center;" id="trimming-strings">Trimming strings</h5> 
+  <p>Sometimes the initial data in a string may have some unnecessary symbols in the beginning or at the end. How can we solve this? Let's introduce the <code class="language-go">strings.Trim</code> function:</p> 
+  <pre><code class="language-go">func Trim(s, cutset string) string</code></pre> 
+  <p>This function is helpful when you need to get rid of certain symbols from both sides of a given string.</p> 
+  <pre><code class="language-go">secret := "STATUS%1337%ENDSTATUS"
+fmt.Println(strings.Trim(secret, "ADENSTU%"))
+
+// Output:
+// 1337</code></pre> 
+  <p></p>
+  <div class="alert alert-warning">
+    Pay attention that the second argument of the 
+   <code class="language-go">Trim</code> function is a cutset, and the function will remove any character present in this cutset from the string. 
+  </div>
+  <p></p> 
+  <p>If you need to get rid of symbols that are only in the beginning or at the end of the target string, there are two more specialized functions for it:</p> 
+  <pre><code class="language-go">func TrimLeft(s, cutset string) string
+func TrimRight(s, cutset string) string</code></pre> 
+  <p>As you may suggest from the names of these functions, they remove symbols from one side of a given string. </p> 
+  <p>One more helper from the family of trim functions is <code class="language-go">strings.TrimSpace</code>. It removes space characters such as <code class="language-go">\n\r\t</code> from both ends of the strings:</p> 
+  <pre><code class="language-go">outerSpace := "    \tOuter Space...  \r\n"
+fmt.Println(strings.TrimSpace(outerSpace))
+
+// Output:
+// Outer Space...</code></pre> 
+  <h5 style="text-align: center;" id="separating-and-concatenating">Separating and concatenating</h5> 
+  <p>Most strings consist of words, sentences, or some encoded data with a special format. To get these pieces, we can split the string and work with the resulting slice. Let's learn how we can do it!</p> 
+  <p>The <code class="language-go">Split</code> function "splits" the target string by a given separator into a slice of strings:</p> 
+  <pre><code class="language-go">phoneNumber := "8800-555-35-35"
+fmt.Println(strings.Split(phoneNumber, "-"))
+
+juiceDayDate := "18/September"
+fmt.Println(strings.Split(juiceDayDate, "/"))
+
+// Output:
+// [8800 555 35 35]
+// [18 September]</code></pre> 
+  <p>The reverse operation is called joining. As you may have already guessed, it joins a slice of strings into one string by a provided separator:</p> 
+  <pre><code class="language-go">DIOSpeech := []string{
+	"WHOA-NANI",
+	"IMA UGOITAZO",
+	"KOITSU..",
+	"BAKANA",
+	"KOITSU NO YUBI GA..",
+	"UGOITAZO",
+}
+
+fmt.Println(strings.Join(DIOSpeech, "!?\n"))
+
+// Output:
+// WHOA-NANI!?
+// IMA UGOITAZO!?
+// KOITSU..!?
+// BAKANA!?
+// KOITSU NO YUBI GA..!?
+// UGOITAZO</code></pre> 
+  <h5 style="text-align: center;" id="wiping-out-words-from-strings">Wiping out words from strings</h5> 
+  <p>Another example of a problem we might want to solve is replacing some part of a string, whether it's because of typos or to create a new string with new data.</p> 
+  <p>If you want to change several appearances of a certain word, <code class="language-go">strings.Replace</code> is here to save the day:</p> 
+  <pre><code class="language-go">banned := "You Have Been Banned From The Minnie Mouse Club"
+fmt.Println(strings.Replace(banned, "Minnie", "Mickey", 1))
+
+// Output:
+// You Have Been Banned From The Mickey Mouse Club</code></pre> 
+  <p></p>
+  <div class="alert alert-primary">
+    The last argument of the Replace function is the maximum number of substitutions of the pattern in the given string. The special case is the negative number 
+   <em>— </em>then
+   <em> </em>we replace all the occurences. 
+  </div>
+  <p></p> 
+  <p><code class="language-go">ReplaceAll</code> does the same job, except it changes all appearances of certain word:</p> 
+  <pre><code class="language-go">func ReplaceAll(s, old, new string) string</code></pre> 
+  <pre><code class="language-go">wrongChorus := `
+	Behind the world, around the world
+	Around the world, behind the world
+	Behind the world, around the world
+`
+
+strings.ReplaceAll(wrongChorus, "Behind", "Around")
+
+// Output:
+// Around the world, around the world
+// Around the world, behind the world
+// Around the world, around the world</code></pre> 
+  <h5 style="text-align: center;" id="conclusion">Conclusion</h5> 
+  <p>In this topic, we have looked at commonly used functions from the <code class="language-go">strings</code> package:</p> 
+  <ul> 
+   <li>Changing case of a string with <code class="language-go">ToLower</code>, <code class="language-go">ToUpper</code>;</li> 
+   <li>Trimming certain symbols from string, using <code class="language-go">Trim</code>, <code class="language-go">TrimRight</code>, <code class="language-go">TrimLeft</code>, and <code class="language-go">TrimSpace</code>;</li> 
+   <li>Splitting a string and joining slices of strings into a new string;</li> 
+   <li>Replacing substring from a string with the use of the <code class="language-go">Replace</code> and <code class="language-go">ReplaceAll</code> functions.</li> 
+  </ul>
+ </body>
+</html>

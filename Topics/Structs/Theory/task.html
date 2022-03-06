@@ -1,0 +1,100 @@
+<h2>Structs</h2>
+<html>
+ <head></head>
+ <body>
+  <p>Go has several data types that we use to group multiple elements, such as arrays and slices; however, they can't hold values of different data types at the same time! When we need to combine variables of different types in our Go program, <strong>structs</strong> are the data type we should implement.</p> 
+  <p>In this topic, we'll learn about Go structs: how to declare and initialize them, how to access the data within them, and finally how to compare one struct with another.</p> 
+  <h5>What is a struct?</h5> 
+  <p>A struct, short for structure, is a data type that allows us to group and combine items of different types such as integers, strings, maps, and even other structs into a single type. Any real-world entity that has a series of properties can be represented as a struct.</p> 
+  <p></p>
+  <div class="alert alert-primary">
+   If you are familiar with Java or C++, structs can be compared with the classes in these object-oriented programming languages. Go's struct type can be termed as a lightweight class that does not support inheritance, but supports composition.
+  </div>
+  <p></p> 
+  <p>Now that we know the essence of the struct type, let's get into detail. To begin with, we will declare the <code class="language-go">Animal</code> struct:</p> 
+  <pre><code class="language-go">type Animal struct {
+    Name        string
+    Class       string
+    Emoji       string
+    avgLifespan int
+    Domestic    bool
+}</code></pre> 
+  <p>In this code snippet, the <code class="language-go">type</code> keyword is used to introduce the new <code class="language-go">struct</code> type; it is followed by the name of the structure <code class="language-go">Animal</code>, and finally the keyword <code class="language-go">struct</code>. After that, we define a list of various <strong>fields</strong> inside the curly braces <code class="language-go">{}</code>, each field having a name and a type.</p> 
+  <p>When declaring structs, we can also define different fields of the same data type in one line:</p> 
+  <pre><code class="language-go">type Animal struct {
+    Name, Class, Emoji string // define all 'string' types in one line
+    avgLifespan        int    
+    Domestic           bool
+}</code></pre> 
+  <h5>Initializing structs</h5> 
+  <p>Now that we've declared the <code class="language-go">Animals</code> struct, we can initialize it with data and also access its fields. Let's look at different ways we can initialize our new <code class="language-go">Animals</code> struct.</p> 
+  <p>The most basic struct initialization looks like this:</p> 
+  <pre><code class="language-go">var crocodile Animal</code></pre> 
+  <p>Like with other data types, this will create a local <code class="language-go">crocodile</code> struct variable of the <code class="language-go">Animal</code> type and all its fields will be set to their default values.</p> 
+  <p>Another way to initialize a struct is with the help of the <code class="language-go">new</code> function from Go's <code class="language-go">builtin</code> package:</p> 
+  <pre><code class="language-go">crocodile := new(Animal)</code></pre> 
+  <p>Here, the <code class="language-go">new</code> function allocates memory for all the fields of the struct, sets them to their default value, and returns a pointer to the struct (<code class="language-go">*Animal</code>).</p> 
+  <p>Finally, we can also initialize a variable of a struct type by using a <strong>struct literal:</strong></p> 
+  <pre><code class="language-go">// Initalizing 'crocodile' with a struct literal using the ':=' operator:
+crocodile := Animal{Name: "Crocodile", Class: "Reptile", Emoji: "🐊", avgLifespan:55, Domestic: false}
+
+fmt.Printf("%#v", crocodile) 
+// main.Animal{Name:"Crocodile", Class:"Reptile", Emoji:"🐊", avgLifespan:55, Domestic:false}</code></pre> 
+  <h5>Accessing and initializing individual fields</h5> 
+  <p>After initializing our struct with data, we can access its individual fields with the help of the <code class="language-go">.</code> operator. Let's go ahead and access the fields of the previously initialized <code class="language-go">crocodile</code> struct:</p> 
+  <pre><code class="language-go">fmt.Println("Animal name:", crocodile.Name)
+fmt.Println("Class:", crocodile.Class)
+fmt.Println("Emoji representation:", crocodile.Emoji)
+fmt.Println("Average lifespan in years:", crocodile.avgLifespan)
+fmt.Println("Is this animal domestic?", crocodile.Domestic)
+
+// Output:
+// Animal name: Crocodile
+// Class: Reptile
+// Emoji representation: 🐊
+// Average lifespan in years: 55
+// Is this animal domestic? false</code></pre> 
+  <p>Apart from accessing individual fields that we have previously declared with a struct literal, we can also assign values to individual fields of an initialized struct, using the <code class="language-go">.</code> operator. For example, let's initialize some of the fields of the new <code class="language-go">octopus</code> struct of the <code class="language-go">Animal</code> type:</p> 
+  <pre><code class="language-go">var octopus Animal // declare &amp; initialize a new 'octopus' struct of the 'Animal' type
+
+octopus.Name = "Octopus"
+octopus.Class = "Cephalopod"
+octopus.Emoji = "🐙"
+...</code></pre> 
+  <h5>Structs comparison and equality</h5> 
+  <p>Two structs are comparable with the equality <code class="language-go">==</code> operator if they belong to the same type and have the same field values. Below we will declare a new <code class="language-go">Person</code> struct and implement some code to compare three different structs of the <code class="language-go">Person</code> type:</p> 
+  <pre><code class="language-go">type Person struct {
+    Name string
+    Age  int
+}
+
+// Declare and assign three different structs of the 'Person' type
+jerry1 := Person{Name: "Jerry", Age: 37}
+jerry2 := Person{Name: "Jerry", Age: 37}
+jerry3 := Person{Name: "Jerry"} // 'jerry3' is missing initialization for the 'Age' field
+
+fmt.Printf("structs: jerry1 and jerry2 are equal is %t\n", jerry1 == jerry2)
+fmt.Printf("structs: jerry1 and jerry3 are equal is %t", jerry1 == jerry3)
+
+// Output:
+// structs: jerry1 and jerry2 are equal is true
+// structs: jerry1 and jerry3 are equal is false</code></pre> 
+  <p>We can see that the structs <code class="language-go">jerry1</code>, <code class="language-go">jerry2</code> and <code class="language-go">jerry3</code> all belong to the same <code class="language-go">Person</code> type; however, <code class="language-go">jerry3</code> doesn't have the same field values as the other two. It is missing initialization for the <code class="language-go">Age</code> field.</p> 
+  <p>Since the <code class="language-go">Age</code> field isn't initialized in the <code class="language-go">jerry3</code> struct, if we try comparing it with <code class="language-go">jerry1</code> we will find that they are not equal, because <code class="language-go">jerry1</code> has both <code class="language-go">Name</code> and <code class="language-go">Age</code> fields initialized, while <code class="language-go">jerry3</code> only has one initialized field: <code class="language-go">Name</code>.</p> 
+  <p></p>
+  <div class="alert alert-primary">
+   Take notice that 
+   <code class="language-go">struct</code> type variables are not comparable if they contain fields such as maps or slices that can't be compared using the equality 
+   <code class="language-go">==</code> operator.
+  </div>
+  <p></p> 
+  <h5>Summary</h5> 
+  <p>Wow! This has been quite a dense topic, but we've learned a lot. The most important points of today's topic are:</p> 
+  <ul> 
+   <li>What a struct is and how we can declare and initialize it in our Go program.</li> 
+   <li>How to access or assign the data of an individual struct field.</li> 
+   <li>How to compare one struct with another and check for equality or inequality.</li> 
+  </ul> 
+  <p>We're not done yet! Let's apply our recently acquired knowledge about structs to solve some problems.</p>
+ </body>
+</html>

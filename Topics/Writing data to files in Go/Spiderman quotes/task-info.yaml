@@ -1,0 +1,21 @@
+type: remote_edu
+files:
+- name: main.go
+  visible: true
+  text: "package main\n\nimport (\n\t\"bufio\"\n\t\"log\"\n\t\"os\"\n)\n\nfunc main()\
+    \ {\n\tquote := readQuote() // today's quote\n\tfile, err := os.Create(\"quote.txt\"\
+    )\n\tif err != nil {\n\t\tlog.Fatal(err)\n\t}\n\n\t// TODO: write the quote to\
+    \ a file\n\n}\n\nfunc readQuote() string {\n\tscanner := bufio.NewScanner(os.Stdin)\n\
+    \tscanner.Split(bufio.ScanLines)\n\t_ = scanner.Scan()\n\treturn scanner.Text()\n\
+    }\n"
+  learner_created: false
+- name: tests.py
+  visible: false
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/18236#comment
+check_profile: hyperskill_go
+status: Solved
+feedback:
+  message: <html>Correct solution</html>
+  time: Fri, 04 Mar 2022 09:51:26 UTC
+record: -1

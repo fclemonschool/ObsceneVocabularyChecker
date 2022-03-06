@@ -1,0 +1,7 @@
+content:
+- Theory
+- Printing individual struct fields
+- Assigning values to struct fields
+- Creating a non-comparable struct
+- Comparing similar structs
+- Creating a Book structure

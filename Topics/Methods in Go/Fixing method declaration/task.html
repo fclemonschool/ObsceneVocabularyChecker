@@ -1,0 +1,35 @@
+<h2>Fixing method declaration</h2>
+<html>
+ <head></head>
+ <body>
+  <p>Lena has created a very simple Go program that takes as input the temperature in Celsius degrees and implements a method <code class="language-go">DisplayAllTemps()</code> on the non-struct <code class="language-go">Temperature</code> type that outputs both the input temperature (in Celsius) and also the converted values in Fahrenheit and Kelvin degrees.</p> 
+  <p>When she tried to execute the program, she got a compiler error in the <code class="language-go">DisplayAllTemps()</code> method declaration. Can you help Lena write the correct method declaration she should use in her program?</p> 
+  <p>Below is the code she has written so far:</p> 
+  <pre><code class="language-go">package main
+
+import "fmt"
+
+type Temperature float64
+
+func (t ?) ?() { // The correct 'DisplayAllTemps() method declaration goes here
+    f := (t * 9 / 5) + 32
+    c := t
+    k := t + 273.15
+
+    fmt.Printf("\n\nTemperature in Celsius: %.2f°C\n", c)
+    fmt.Printf("Temperature in Fahrenheit: %.2f°F\n", f)
+    fmt.Printf("Temperature in Kelvin: %.2f K", k)
+}
+
+func main() {
+    var t Temperature
+
+    fmt.Printf("Please enter the temperature in Celsius: ")
+    fmt.Scanln(&amp;t)
+
+    t.DisplayAllTemps()
+}</code></pre> 
+  <p>Take notice that the method declaration you enter below should have the complete syntax, including <code class="language-go">func</code> at the beginning:</p> 
+  <pre><code class="language-go">func (t ?) ?()</code></pre>
+ </body>
+</html>

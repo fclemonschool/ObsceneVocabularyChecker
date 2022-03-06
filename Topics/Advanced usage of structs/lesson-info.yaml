@@ -1,0 +1,7 @@
+content:
+- Theory
+- What are struct tags
+- Fixing the anonymous struct declaration
+- Accessing promoted fields directly
+- Facts about anonymous structs
+- Adding struct tags

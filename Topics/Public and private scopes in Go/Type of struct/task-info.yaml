@@ -1,0 +1,28 @@
+type: choice
+is_multiple_choice: true
+options:
+- text: <code>Name</code>
+- text: <code>Capital</code>
+- text: <code>Language</code>
+- text: <code>Currency</code>
+- text: <code>Population</code>
+- text: <code>country</code> does not begin with a capital letter, so it's not a public
+    (exported) <code>struct</code> type. Its fields will never be accessible from
+    other packages.
+message_correct: Congratulations!
+message_incorrect: Incorrect solution
+files:
+- name: main.go
+  visible: true
+  text: |+
+    // You can experiment here, it won’t be checked
+
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/17518#comment
+status: Solved
+feedback:
+  message: <html>Correct solution</html>
+  time: Sun, 06 Mar 2022 12:43:11 UTC
+record: -1
+selected_options:
+- 5

@@ -1,0 +1,15 @@
+type: code
+files:
+- name: main.go
+  visible: true
+  text: "package main\n\nimport (\n    \"fmt\"\n    \"strings\"\n)\n\nfunc main()\
+    \ {\n\tvar b strings.Builder\n\n    // call the Write() function two times with\
+    \ the slice of bytes containing the phrases:\n    b.?([]byte(?))\n\n    b.?([]byte(?))\n\
+    \n    // print the built string below\n    fmt.Println(b.?)\n}"
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/18085#comment
+status: Solved
+feedback:
+  message: <html>Correct solution</html>
+  time: Sun, 06 Mar 2022 08:43:40 UTC
+record: -1

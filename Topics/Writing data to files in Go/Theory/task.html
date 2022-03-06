@@ -1,0 +1,173 @@
+<h2>Writing data to files in Go</h2>
+<html>
+ <head></head>
+ <body>
+  <p>A crucial skill for Go programmers is knowing how to write data to both new and existing files. It is something you will use so frequently you will forget that at some point you didn't know how to do it. So, let's not wait any longer <em>—</em> now is a great time to learn how to write data to files, and in particular, how to write strings to text files in Go.</p> 
+  <h5 id="writing-a-string-to-a-file">Writing a string to a file</h5> 
+  <p>One of the basic file operations is writing a string to a file. In Go, we can easily do this with the help of the <code class="language-go">WriteFile()</code> function from the <code class="language-go">ioutil</code> package:</p> 
+  <pre><code class="language-go">package main
+
+import (
+    "io/ioutil"
+    "log"
+)
+
+func main() {
+    s := "Hello, JB Academy!"
+    if err := ioutil.WriteFile("test.txt", []byte(s), 0644); err != nil {
+        log.Fatal(err) // exit the program if we have an unexpected error
+    }
+}</code></pre> 
+  <p>Below you will see the written string within the <a target="_blank" href="https://stepik.org/media/attachments/lesson/635085/test.txt" rel="noopener noreferrer nofollow"><em>test.txt</em></a> file:</p> 
+  <pre><code class="language-go">Hello, JB Academy!</code></pre> 
+  <p>The <code class="language-go">WriteFile()</code> function returns an error. It takes the name of a file as its first argument, then a slice of bytes, and finally the permission mode <code class="language-go">0644</code>, which lets us create a file and open it in read-and-write mode. After the data is written to the file, <code class="language-go">WriteFile()</code> automatically closes it.</p> 
+  <p></p>
+  <div class="alert alert-warning">
+   Take notice that the 
+   <code class="language-go">WriteFile()</code> function creates the file in case it doesn't exist. However, if the file does exist, 
+   <code class="language-go">WriteFile()</code> will truncate its contents before writing any new data to it!
+  </div>
+  <p></p> 
+  <h5 id="the-fmtfprint-function">The fmt.Fprint() function</h5> 
+  <p>Another way to write strings to a file in Go is through the <code class="language-go">Fprint()</code> function from the <code class="language-go">fmt</code> package. The <code class="language-go">fmt.Fprint()</code> function is very similar to the <code class="language-go">fmt.Print()</code> function; the difference between them is that instead of writing to the standard output, <code class="language-go">fmt.Fprint()</code> will write a string to a file.</p> 
+  <p>Now, let's take a look at a basic implementation of the <code class="language-go">fmt.Fprint()</code> function:</p> 
+  <pre><code class="language-go">package main
+
+import (
+    "fmt"
+    "log"
+    "os"
+)
+
+func main() {
+    file, err := os.Create("hello.txt") // create and open 'hello.txt' in read-and-write mode
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer file.Close() // close the file before exiting the program
+
+    // pass the file descriptor within the 'file' variable and a string to the fmt.Fprint() function
+    b, err := fmt.Fprint(file, "Hello, JB Academy!") 
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("%d bytes written successfully!", b) // 18 bytes written successfully!
+}</code></pre> 
+  <p>The <code class="language-go">Fprint()</code> function takes a <strong>file descriptor</strong> and a string as its arguments, then it returns the number of bytes written and an error, if any. In very simple terms, a file descriptor is a <code class="language-go">File</code> type that the program returns from functions such as <code class="language-go">Create()</code>, <code class="language-go">Open()</code> and <code class="language-go">OpenFile()</code> from the <code class="language-go">os</code> package.</p> 
+  <p></p>
+  <div class="alert alert-warning">
+   Remember that the 
+   <code class="language-go">os.Create()</code> function creates the file in case it doesn't exist. However, if the file already exists, 
+   <code class="language-go">os.Create()</code> will truncate its contents!
+  </div>
+  <p></p> 
+  <p>Apart from <code class="language-go">Fprint()</code>, there are other functions that allow us to write strings to a file within the <code class="language-go">fmt</code> package: <code class="language-go">Fprintln()</code> and <code class="language-go">Fprintf()</code>. </p> 
+  <p>Below is the written string within the <a target="_blank" href="https://stepik.org/media/attachments/lesson/635085/hello1.txt" rel="noopener noreferrer nofollow"><em>hello.txt</em></a> file:</p> 
+  <pre><code class="language-go">Hello, JB Academy!</code></pre> 
+  <h5 id="writing-strings-line-by-line">Writing strings line by line</h5> 
+  <p>Another common file writing operation is writing strings to a file line by line. We can do this by implementing a <code class="language-go">for...range</code> loop that contains the <code class="language-go">fmt.Fprintln()</code> function within it:</p> 
+  <pre><code class="language-go">...
+
+func main() {
+    file, err := os.Create("hello.txt")
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer file.Close()
+
+    data := []string{"Hello, JB Academy!",
+        "I am writing strings line by line",
+        "I can write emojis too 🅱️®️🅾️!😤😤",
+    }
+
+    for i, line := range data {
+        fmt.Fprintln(file, line) // writes each line of the 'data' slice of strings
+        if err != nil {
+            log.Fatal(err)
+        }
+        if i == len(data) - 1 {
+            fmt.Printf("%d lines written successfully!", i + 1) // 3 lines written successfully!
+        }
+    }
+}</code></pre> 
+  <p>In the above code, we use the <code class="language-go">fmt.Fprintln()</code> function because it automatically adds a new line <code class="language-go">\n</code> after each iteration. After the <code class="language-go">for...range</code> loop finishes iterating over the <code class="language-go">data</code> slice of strings, we can take a look at the contents of our <a target="_blank" href="https://stepik.org/media/attachments/lesson/635085/hello2.txt" rel="noopener noreferrer nofollow"><em>hello.txt</em></a> file:</p> 
+  <pre><code class="language-go">Hello, JB Academy!
+I am writing strings line by line
+I can write emojis too 🅱️®️🅾️!😤😤</code></pre> 
+  <p></p>
+  <div class="alert alert-primary">
+   In the code implementation above, the 
+   <code class="language-go">Fprintln()</code> function will always append the new line 
+   <code class="language-go">\n</code> character at the end of the file, thus ending up with 4 lines in our 
+   <em>hello.txt</em> file instead of 3.
+  </div>
+  <p></p> 
+  <h5 id="writing-formatted-strings-to-a-file">Writing formatted strings to a file</h5> 
+  <p>So far we've seen how to write a single string and also multiple strings to a file. What if we need to write a formatted string to a file?</p> 
+  <p>We can write formatted strings to a file with the help of the <code class="language-go">fmt.Fprintf()</code> function. For example, it allows us to use formatting verbs when writing a string to a file:</p> 
+  <pre><code class="language-go">...
+
+func main() {
+    file, err := os.Create("hello.txt")
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer file.Close()
+
+    var pi float64 = 3.14159265359 // create a new float64 variable 'pi'
+
+    b, err := fmt.Fprintf(file, "Hello, JB Academy!\nThe value of pi is %.5f", pi)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("%d bytes written successfully!", b) // 45 bytes written successfully!
+}</code></pre> 
+  <p>Just like the other variants of the Fprint() family of functions, <code class="language-go">Fprintf()</code> takes a file descriptor and a string as its arguments, and then returns the number of bytes written and an error if any.</p> 
+  <p>Now, let's take a look at the contents of <a target="_blank" href="https://stepik.org/media/attachments/lesson/635085/hello3.txt" rel="noopener noreferrer nofollow"><em>hello.txt</em></a> and check the written <code class="language-go">pi</code> variable as a string, formatted by the <code class="language-go">%.5f</code> verb:</p> 
+  <pre><code class="language-go">Hello, JB Academy!
+The value of pi is 3.14159</code></pre> 
+  <h5 id="appending-data-to-a-file">Appending data to a file</h5> 
+  <p>As we've seen above, <code class="language-go">os.Create()</code> creates and opens a file in read-and-write mode. However, if the file already exists its contents will be truncated! So, if we need to add data to a file and preserve its initial content we can implement the following code:</p> 
+  <pre><code class="language-go">...
+
+func main() {
+    // open the file in append-and-write mode - permission mode 0644 is required!
+    file, err := os.OpenFile("hello.txt", os.O_APPEND|os.O_WRONLY, 0644)
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer file.Close()
+
+    additionalLine := "ALWAYS 🕓 make sure 👍 your code 💻 is 💡 clean 🧼 and well 💯 structured 🏛."
+
+    b, err := fmt.Fprintln(file, additionalLine) // append the additional line
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Printf("%d bytes appended successfully!", b) // 92 bytes appended successfully!
+}</code></pre> 
+  <p>We can add or append to a file that already has data by opening the file via the <code class="language-go">os.OpenFile()</code> function, combining the <code class="language-go">os.O_APPEND</code> and <code class="language-go">os.O_WRONLY</code> flags with the permission mode <code class="language-go">0644</code>. This combination of flags opens the file in append-and-write mode.</p> 
+  <p></p>
+  <div class="alert alert-warning">
+   If we tried to open the file via the 
+   <code class="language-go">os.Open()</code> function instead, we would not be able to append any data to the file because 
+   <code class="language-go">os.Open()</code> opens the file in read-only mode!
+  </div>
+  <p></p> 
+  <p>Finally, let's take a look at the final contents of the <a target="_blank" href="https://stepik.org/media/attachments/lesson/635085/hello4.txt" rel="noopener noreferrer nofollow"><em>hello.txt</em></a> file:</p> 
+  <pre><code class="language-go">Hello, JB Academy!
+The value of pi is 3.14159
+ALWAYS 🕓 make sure 👍 your code 💻 is 💡 clean 🧼 and well 💯 structured 🏛.</code></pre> 
+  <h5 id="summary">Summary</h5> 
+  <p>In this topic, we've learned how to write data to files in Go, and specifically, how to write strings to text files. We've covered in detail the following theory:</p> 
+  <ul> 
+   <li>A basic way to create a text file and write a string to it, via the <code class="language-go">ioutil.WriteFile()</code> function;</li> 
+   <li>How to write multiple string lines to a file, with the <code class="language-go">fmt.Fprintln()</code> function and the help of a <code class="language-go">for...range</code> loop;</li> 
+   <li>How to write formatted strings to a file with the <code class="language-go">fmt.Fprintf()</code> function;</li> 
+   <li>How to open a file that already contains data in append-and-write mode and append string lines to it.</li> 
+  </ul> 
+  <p>Now, to make sure you remember this theory and properly write data to files in your future Go programs, let's work on a few coding and theory problems.</p>
+ </body>
+</html>

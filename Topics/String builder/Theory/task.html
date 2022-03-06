@@ -1,0 +1,142 @@
+<h2>String builder</h2>
+<html>
+ <head></head>
+ <body>
+  <p>In Go, strings are <strong>immutable</strong>. This means that once we create a string, we can't change it.</p> 
+  <p>If we want to modify the content of an existing string, we should create a new string. It is a working solution, but when we need to modify many strings, this approach becomes inefficient. Indeed, each operation creates a new string, making our program consume more memory, which is not ideal for performance.</p> 
+  <p>To solve this problem, we can implement the <code class="language-go">Builder</code> struct type from the <code class="language-go">strings</code> package: it allows us to easily build, or <strong>concatenate</strong>, strings.</p> 
+  <h5>Creating a string with strings.Builder</h5> 
+  <p>Suppose we wanted to concatenate or join a series of strings together without importing any additional packages apart from <code class="language-go">fmt</code>. The code required to achieve this would look something like this:</p> 
+  <pre><code class="language-go">package main
+
+import "fmt"
+
+func concat(strs ...string) string {
+    var result string
+    for _, str := range strs {
+        result += str
+    }
+    return result
+}
+
+func main() {
+    fmt.Println(concat("Hello", " World", "!")) // Hello World!
+}</code></pre> 
+  <p>Let's examine the <code class="language-go">concat</code> function; every time we call <code class="language-go">result += str</code>, a new string gets allocated in memory. As we've mentioned previously, this happens because strings in Go are immutable, so every time we change, add, or remove contents from a string, we have to create a new string.</p> 
+  <p>To make our program more memory efficient, we should avoid creating new strings every time we need to change or modify one. We can achieve it by using the <code class="language-go">strings.Builder</code> struct type along with its <code class="language-go">WriteString()</code> method:</p> 
+  <pre><code class="language-go">package main
+
+import (
+    "fmt"
+    "strings"
+)
+
+func concat(strs ...string) string {
+    var b strings.Builder
+    for _, s := range strs {
+        b.WriteString(s)
+    }
+    return b.String()
+}
+
+func main() {
+    fmt.Println(concat("Hello", " World", "!")) // Hello World!
+}</code></pre> 
+  <p>The updated <code class="language-go">concat</code> function implements the <code class="language-go">b</code> variable of the <code class="language-go">strings.Builder</code> type. After that, we call the <code class="language-go">WriteString()</code> method within the <code class="language-go">for...range</code> loop to start appending the contents of <code class="language-go">s</code> to the buffer of <code class="language-go">b</code>. This way we concatenate the strings we passed to it without creating a new string every time. Finally, we call the <code class="language-go">String()</code> method, which simply returns the previously accumulated string.</p> 
+  <p></p>
+  <div class="alert alert-primary">
+   Even though a builder doesn't create a new string every time we change a string, it still allocates new memory for the buffer of the builder to append data to it. In general, it's optimal to use a builder when we need to concatenate 3 or more strings. We'll take a look at how a builder manages its buffer data further in this topic.
+  </div>
+  <p></p> 
+  <h5>Additional data writing helpers</h5> 
+  <p>Apart from the <code class="language-go">WriteString()</code> method, the <code class="language-go">strings.Builder</code> type supports three additional methods to write data to the builder: <code class="language-go">Write()</code>, <code class="language-go">WriteRune()</code> and <code class="language-go">WriteByte()</code>.</p> 
+  <p>The <code class="language-go">Write()</code> method allows us to add a slice of bytes to our builder:</p> 
+  <pre><code class="language-go">...
+
+func main() {
+    var b strings.Builder
+    b.Write([]byte("Hello JetBrains Academy!"))
+
+    fmt.Println(b.String()) // Hello JetBrains Academy!
+}</code></pre> 
+  <p>The <code class="language-go">WriteRune() and WriteByte()</code> methods are very similar; we can use them to add single characters to our string as we build it:</p> 
+  <pre><code class="language-go">...
+
+func concatRunes(runes ...rune) string {
+    var b strings.Builder
+    for _, r := range runes {
+        b.WriteRune(r)
+    }
+    return b.String()
+}
+
+func main() {
+    fmt.Println(concatRunes('e', 'm', 'o', 'j', 'i', '😂', '👌', '💯')) // emoji😂👌💯
+}</code></pre> 
+  <p>If we need to append the UTF-8 encoding of an arbitrary rune such as an emoji, e.g. 😂👌💯, we need to use the <code class="language-go">WriteRune()</code> method. However, if we're working with <a target="_blank" href="https://www.w3schools.com/charsets/ref_html_ascii.asp#:~:text=ASCII%20is%20a%207%2Dbit,Z%2C%20and%20some%20special%20characters." rel="noopener noreferrer nofollow">standard ASCII characters</a> we can use the <code class="language-go">WriteByte()</code> method.</p> 
+  <p></p>
+  <div class="alert alert-primary">
+   If we tried to pass an emoji such as "😂" to the 
+   <code class="language-go">WriteByte()</code> method, we would get the 
+   <code class="language-go">constant 128514 overflows byte</code> error, since it's not a standard ASCII character.
+  </div>
+  <p></p> 
+  <h5>How does string.Builder organize its data?</h5> 
+  <p>So far we've seen the most basic <code class="language-go">string.Builder</code> use cases, but you might be wondering how the <code class="language-go">string.Builder</code> type organizes its data internally. Let's have a look.</p> 
+  <p>A very simple explanation is that the <code class="language-go">string.Builder</code> type uses an <strong>internal buffer slice</strong> to store pieces of data. Every time we call any of the <code class="language-go">Write</code> helpers to write content, the data is appended to the buffer slice internally:</p> 
+  <p style="text-align: center;"><img alt="" height="536" name="stringsBuilderRev4.svg" src="https://ucarecdn.com/7d00aa72-b738-4510-af25-0026fbb67e4f/" width="651"></p> 
+  <p>The above diagram showcases the previous <code class="language-go">WriteRune()</code> method example. Initially, the buffer slice within the <code class="language-go">b</code> variable of the <code class="language-go">strings.Builder</code> type starts with a capacity of 8 bytes. After we append all the standard ASCII characters, writing "emoji", the buffer still has 3 free bytes. However, when our program reads the next rune (an emoji) — "😂",<strong> </strong>it requires 4 bytes of space.</p> 
+  <p>Since we only have 3 free bytes left, Go automatically allocates a new buffer slice with a bigger capacity, in this case, 20 bytes. Then it copies the contents of the old slice to the new one, after which it appends the emoji rune "😂", followed by the remaining emoji runes — "👌💯".</p> 
+  <p>Take notice that Go allocates memory for the new buffer slice dynamically. This means that Go doesn't allocate the exact memory capacity required to fill up the new buffer slice with the remaining emojis. Go will always allocate more memory than the exact capacity required to avoid a <a target="_blank" href="https://en.wikipedia.org/wiki/Buffer_overflow" rel="noopener noreferrer nofollow">buffer overflow</a>! Therefore, after appending the last two emojis, we still end up with 3 free bytes.</p> 
+  <h5>Improving string.Builder performance</h5> 
+  <p>Now that you know how <code class="language-go">strings.Builder</code> organizes its data internally, let's take a look at how we can preallocate the size of the buffer slice. This way, our code won't require incrementing the allocated memory dynamically.</p> 
+  <p>Suppose we already know the size of the final string we pretend to build. We can go ahead and use the <code class="language-go">Grow()</code> method to preallocate the size of the buffer slice:</p> 
+  <pre><code class="language-go">...
+
+func main() {
+    var b strings.Builder
+    b.Grow(61) // We will be writing 61 bytes
+
+    b.WriteString("Countdown to liftoff!\n") // 22 bytes written (including '\n')
+    for i := 5; i &gt;= 1; i-- {
+        // 5 bytes written for each line (including '\n')
+        b.WriteString(fmt.Sprintf("%d...\n", i))
+    }
+    b.WriteString("Liftoff! 🚀\n") // 14 bytes written (including '\n')
+
+    fmt.Print(b.String())
+    fmt.Println("Capacity of 'b' =", b.Cap())
+    fmt.Println("Length of 'b' =", b.Len())
+}
+
+// Output:
+// Countdown to liftoff!
+// 5...
+// 4...
+// 3...
+// 2...
+// 1...
+// Liftoff! 🚀
+// Capacity of 'b' = 61
+// Length of 'b' = 61</code></pre> 
+  <p>Since we already know how many bytes each line will contain, we can simply pass <code class="language-go">61</code> bytes as an argument to the <code class="language-go">Grow()</code> method. After we write all the strings, we can print the capacity and length of <code class="language-go">b</code> with the help of the <code class="language-go">Cap()</code> and <code class="language-go">Len()</code> methods and confirm that both the capacity and length of the slice buffer within the <code class="language-go">b</code> variable are equal to <code class="language-go">61</code>.</p> 
+  <p></p>
+  <div class="alert alert-primary">
+   In case we pass an incorrect amount of bytes to the 
+   <code class="language-go">Grow()</code> method, Go will automatically allocate a new buffer slice with a bigger capacity and copy the contents of the old slice to the new one, beating the purpose of using the 
+   <code class="language-go">Grow()</code> method anyway. Hence, to use the 
+   <code class="language-go">Grow()</code> method effectively, we should know the exact size or a close estimate of the final string we intend to build.
+  </div>
+  <p></p> 
+  <h5>Summary</h5> 
+  <p>In this topic, we've learned how to concatenate strings with the help of the <code class="language-go">strings.Builder</code> struct type and its data writing helper methods.</p> 
+  <p>The list below recounts the main theoretical points covered in this topic.</p> 
+  <ul> 
+   <li>What the <code class="language-go">strings.Builder</code> type is and what its most basic use cases are.</li> 
+   <li>Four data writing helpers that the <code class="language-go">strings.Builder</code> type supports: <code class="language-go">Write()</code>, <code class="language-go">WriteString()</code>, <code class="language-go">WriteRune()</code> and <code class="language-go">WriteByte()</code>.</li> 
+   <li>How the <code class="language-go">strings.Builder</code> type uses a buffer slice to manage its data internally.</li> 
+   <li>How to use the <code class="language-go">Grow()</code> method to preallocate memory for the buffer slice.</li> 
+  </ul> 
+  <p>This has been a challenging topic, but we're not done yet! Let's solve some theory and coding tasks now to make sure we've learned how to implement <code class="language-go">strings.Builder</code> along with its methods.</p>
+ </body>
+</html>

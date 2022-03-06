@@ -1,0 +1,22 @@
+type: code
+files:
+- name: main.go
+  visible: true
+  text: "package main\n\nimport (\n    \"fmt\"\n    \"strings\"\n)\n\nfunc main()\
+    \ {\n\tvar b strings.Builder\n\n\tvar c byte  // what type allows us to read Unicode\
+    \ characters?\n\tfmt.Scanln(&c)\n\n\tfor i := 0; i < 3; i++ {\n\t\tb.WriteByte(c)\
+    \ // what function allows us to write Unicode characters?\n\t}\n\n    // This\
+    \ line outputs the Unicode character do not delete it!\n\tfmt.Println(b.String())\n\
+    }"
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/18082#comment
+status: Solved
+feedback:
+  message: |-
+    <html>Well done, Lena says thanks! 👩‍💻
+
+    ඞඞඞ
+    😳😳😳
+    🤔🤔🤔</html>
+  time: Sun, 06 Mar 2022 08:42:00 UTC
+record: -1

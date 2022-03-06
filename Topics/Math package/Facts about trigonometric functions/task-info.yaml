@@ -1,0 +1,29 @@
+type: choice
+is_multiple_choice: true
+options:
+- text: To calculate the sine of 45°, we must convert from degrees to radians — <code>degrees
+    * math.Pi / 180</code>; and pass the converted radians value to the <code>math.Sin()</code>
+    function
+- text: The trigononometric functions take degrees as arguments
+- text: The trigononometric functions take radians as arguments
+- text: To calculate the tan of 1.571 radians, we can simply pass <code>1.571</code>
+    as an argument to the <code>math.Tan()</code> function
+message_correct: Congratulations!
+message_incorrect: Incorrect solution
+files:
+- name: main.go
+  visible: true
+  text: |+
+    // You can experiment here, it won’t be checked
+
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/18433#comment
+status: Solved
+feedback:
+  message: <html>Correct solution</html>
+  time: Sun, 06 Mar 2022 13:27:11 UTC
+record: -1
+selected_options:
+- 0
+- 2
+- 3

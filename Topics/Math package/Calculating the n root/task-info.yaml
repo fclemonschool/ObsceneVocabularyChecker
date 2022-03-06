@@ -1,0 +1,15 @@
+type: code
+files:
+- name: main.go
+  visible: true
+  text: "package main\n\nimport (\n\t\"fmt\"\n\t\"math\"\n)\n\nfunc main() {\n\tvar\
+    \ num float64\n\tfmt.Scanln(&num)\n\n\tvar n float64\n\tfmt.Scanln(&n)\n\n\t//\
+    \ calculate the 'n' root of 'num' using the math.Pow() function below\n\troot\
+    \ := math.Pow(?, ?)\n\n\tfmt.Printf(\"%.2f\", root)\n}"
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/18438#comment
+status: Solved
+feedback:
+  message: <html>Correct solution</html>
+  time: Sun, 06 Mar 2022 13:23:15 UTC
+record: -1

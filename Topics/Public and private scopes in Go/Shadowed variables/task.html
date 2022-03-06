@@ -1,0 +1,21 @@
+<h2>Shadowed variables</h2>
+<html>
+ <head></head>
+ <body>
+  <p>Below you will see a small Go program that has a shadowed variable <code class="language-go">burgerCombo</code>. Please select one line of code that needs changing or removing, so that the program can print the correct amount of food in a burger combo: 🍔🍟🥤 and not just one burger: 🍔. Answer with the number of the line you choose.</p> 
+  <pre><code class="language-go">package main
+        
+import "fmt"
+
+func main() {
+    burgerCombo := "🍔"       // 1
+
+    if true {
+        burgerCombo := "🍔"   // 2
+        burgerCombo += "🍟🥤" // 3
+    }
+    
+    fmt.Println(burgerCombo)   // 4
+}</code></pre>
+ </body>
+</html>

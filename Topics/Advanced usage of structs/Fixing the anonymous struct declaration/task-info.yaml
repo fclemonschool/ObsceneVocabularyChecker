@@ -1,0 +1,14 @@
+type: code
+files:
+- name: main.go
+  visible: true
+  text: "package main\n\nimport \"fmt\"\n\nvar grades = struct {\n\tName  string\n\
+    \tScore int\n}{\n\t// initialize the fields of the anonymous 'grades' struct here\n\
+    }"
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/17499#comment
+status: Solved
+feedback:
+  message: <html>Passed. Well done! 🏆</html>
+  time: Sat, 05 Mar 2022 16:09:55 UTC
+record: -1

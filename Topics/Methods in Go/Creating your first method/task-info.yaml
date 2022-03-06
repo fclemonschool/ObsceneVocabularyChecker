@@ -1,0 +1,21 @@
+type: code
+files:
+- name: main.go
+  visible: true
+  text: "package main\n\nimport \"fmt\"\n\ntype Employee struct {\n\tFirstName, LastName\
+    \ string\n\tSalary              float64\n}\n\n// Create the GetSalary() method\
+    \ below for the 'Employee' type that returns the 'Salary' field.\nfunc (? ?) ?\
+    \ float64 {\n\treturn ?\n}\n\nfunc main() {\n\t// Do not change the code below!\n\
+    \tvar e Employee\n\tfmt.Scanln(&e.FirstName, &e.LastName, &e.Salary)\n\n\t// call\
+    \ the GetSalary() method on the '?' sign!\n\tfmt.Printf(\"%s %s earns: \U0001f4b2\
+    \ %.2f USD\\n\", e.FirstName, e.LastName, ?)\n}"
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/17743#comment
+status: Solved
+feedback:
+  message: |-
+    <html>Homer Simpson earns: 💲 362.19 USD
+    SpongeBob SquarePants earns: 💲 0.25 USD
+    Mark Zuckerberg earns: 💲 1.00 USD</html>
+  time: Sun, 06 Mar 2022 12:51:28 UTC
+record: -1

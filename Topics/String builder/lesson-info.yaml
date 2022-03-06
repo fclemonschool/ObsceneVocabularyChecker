@@ -1,0 +1,7 @@
+content:
+- Theory
+- String builder with Unicode characters
+- What is the string.Builder type
+- Writing a slice of bytes with Write()
+- The String() method
+- The data writing helpers

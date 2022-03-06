@@ -1,0 +1,15 @@
+type: code
+files:
+- name: main.go
+  visible: true
+  text: "package main\n\nimport (\n\t\"encoding/json\"\n\t\"fmt\"\n\t\"log\"\n)\n\n\
+    type bankAccount struct {\n\t                    // add the struct tags below!\n\
+    \tAccountId   int     `?:\"?\"`\n\tAccountType string  `?:\"?\"`\n\tBalance  \
+    \   float64 `?:\"?\"`\n}"
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/17503#comment
+status: Solved
+feedback:
+  message: <html>Passed. Well done! 🏆</html>
+  time: Sat, 05 Mar 2022 16:17:33 UTC
+record: -1

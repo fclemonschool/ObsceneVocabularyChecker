@@ -1,0 +1,20 @@
+type: code
+files:
+- name: main.go
+  visible: true
+  text: "package main\n\nimport (\n\t\"bufio\"\n\t\"fmt\"\n\t\"log\"\n\t\"os\"\n\t\
+    \"strconv\"\n)\n\n// Do not delete the splitFloat() function!\nfunc splitFloat(data\
+    \ []byte, atEOF bool) (advance int, token []byte, err error) {\n\tadvance, token,\
+    \ err = bufio.ScanWords(data, atEOF)\n\tif err == nil && token != nil {\n\t\t\
+    _, err = strconv.ParseFloat(string(token), 64)\n\t}\n\treturn\n}\n\nfunc main()\
+    \ {\n\tscanner := bufio.NewScanner(os.Stdin)\n    // Set 'splitFloat' as the split\
+    \ function below\n\tscanner.?(?)\n\n    // Write the for loop to scan and then\
+    \ output the scanned data\n\tfor ? {\n\t\tfmt.Println(?)\n\t}\n\tif err := scanner.Err();\
+    \ err != nil {\n\t\tlog.Println(err)\n\t}\n}"
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/18574#comment
+status: Solved
+feedback:
+  message: <html>Correct solution</html>
+  time: Sun, 06 Mar 2022 09:06:36 UTC
+record: -1

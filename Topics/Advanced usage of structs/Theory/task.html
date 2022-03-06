@@ -1,0 +1,156 @@
+<h2>Advanced usage of structs</h2>
+<html>
+ <head></head>
+ <body>
+  <p>Today we continue our discussion about structs. In this topic, you will learn about advanced struct usage concepts: anonymous structs, nested structs (those that contain another struct as one or many of its fields), structs with anonymous fields, structs with promoted fields, and struct tags in Go.</p> 
+  <h5>Anonymous structs</h5> 
+  <p>We covered previously a basic struct type declaration by creating a new data type. However, it is also possible to declare a struct without a new data type. These kinds of structs are called <strong>anonymous structs</strong>. Let's take a look at an example:</p> 
+  <pre><code class="language-go">package main
+
+import "fmt"
+
+var teslaModelS = struct {
+    Brand, Model, Color string
+    weightInKg          int
+}{
+    Brand:      "Tesla",
+    Model:      "Model S",
+    Color:      "Red",
+    weightInKg: 2250,
+}
+
+func main() {
+    fmt.Println(teslaModelS) // {Tesla Model S Red 2250}
+}</code></pre> 
+  <p>Above, we declare the <code class="language-go">teslaModelS</code> anonymous struct with three steps. First, we apply the <code class="language-go">var teslaModelS = struct</code> syntax, then declare its fields within curly braces <code class="language-go">{}</code>, and finally, initialize the fields with a <strong>struct literal</strong>.</p> 
+  <p></p>
+  <div class="alert alert-primary">
+   Anonymous structs must be immediately accompanied by a struct literal that initializes its fields. Otherwise, we will get a compiler error indicating that the anonymous struct is not an expression.
+  </div>
+  <p></p> 
+  <p>Anonymous structs provide a quick way to create a struct without actually creating a new data type in our program. Besides, if we want to use a struct only once in our program, it makes sense to declare it as an anonymous struct, so that we can't accidentally use it again. Apart from that, one of the most common applications of anonymous structs is to program <a target="_blank" href="https://yourbasic.org/golang/table-driven-unit-test/" rel="noopener noreferrer nofollow">table-driven unit tests.</a></p> 
+  <h5>Nested structs</h5> 
+  <p>Since structs allow us to group and combine different data types, a struct may contain one or many structs as part of its fields. To better understand the <strong>nested struct</strong> concept, let's go ahead and create two structs, namely <code class="language-go">Address</code> and <code class="language-go">Employee</code>:</p> 
+  <pre><code class="language-go">type Address struct {
+    City  string
+    State string
+}
+
+type Employee struct {
+    Name    string
+    Age     int
+    Salary  float64
+    Address Address // this field is the nested struct Address within Employee
+}
+
+func main() {
+    homer := Employee{
+        Name:    "Homer",
+        Age:     39,
+        Salary:  724.38,
+        Address: Address{City: "Springfield", State: "Oregon"},
+    }
+
+    // we can print the nested struct fields using two instances of the '.' operator:
+    fmt.Println("City:", homer.Address.City)   // City: Springfield
+    fmt.Println("State:", homer.Address.State) // State: Oregon
+}</code></pre> 
+  <p>After declaring the <code class="language-go">Address</code> field within the <code class="language-go">Employee</code> struct, we'll be able to access and print the nested struct fields <code class="language-go">City</code> and <code class="language-go">State</code> of the <code class="language-go">Address</code> struct by using the <code class="language-go">.</code> operator twice.</p> 
+  <h5>Anonymous fields</h5> 
+  <p>It is possible to create a struct with fields that contain only a data type without the field name. We call these kinds of fields <strong>anonymous fields</strong>. To learn how they function, we will create a <code class="language-go">Country</code> struct with two anonymous fields:</p> 
+  <pre><code class="language-go">type Country struct {
+    string
+    int
+}</code></pre> 
+  <p>Even though the two anonymous fields <code class="language-go">string</code> and <code class="language-go">int</code> don't have a defined name, they get the same name as their data type, by default.</p> 
+  <p>To explain this concept further, we are going to assign values to the anonymous fields:</p> 
+  <pre><code class="language-go">...
+var france Country
+
+// this is how we assign values to the anonymous fields,
+// the name of the fields is the same as the data type
+france.string = "France"
+france.int = 67413000
+
+fmt.Println("Country name:", france.string) // Country name: France
+fmt.Println("Population:", france.int)      // Population: 67413000</code></pre> 
+  <p></p>
+  <div class="alert alert-warning">
+   When we create a struct that has anonymous fields, we can only have one anonymous field per data type! For example, if we had two 
+   <code class="language-go">string</code> type anonymous fields in the previously created 
+   <code class="language-go">Country</code> struct, we would get the following compiler errors: 
+   <code class="language-go">duplicate field string</code> and 
+   <code class="language-go">ambiguous selector france.string</code>.
+  </div>
+  <p></p> 
+  <h5>Promoted fields</h5> 
+  <p><strong>Promoted fields</strong> are fields that belong to an anonymous struct field within a struct. We can access promoted fields as if they belong directly to the struct that holds the anonymous struct field.</p> 
+  <p>Since the promoted field concept can be a little complex to understand, let's explore it through an example. We'll start by removing the name of the <code class="language-go">Address</code> field within our <code class="language-go">Employee</code> struct: this way, we will declare it as an anonymous field, just passing the <code class="language-go">Address</code> struct type directly:</p> 
+  <pre><code class="language-go">...
+type Employee struct {
+    Name    string
+    Age     int
+    Salary  float64
+    Address // now this field doesn't have a name, just the Address struct type
+}
+
+func main() {
+    var homer Employee
+    homer.Name = "Homer"
+    homer.Age = 39
+    homer.Salary = 724.38
+    
+    // we can access the promoted fields of the nested struct Address directly:
+    homer.City = "Springfield"
+    homer.State = "Oregon"
+
+    // we can print the promoted fields City and State directly:
+    fmt.Println("City:", homer.City)   // City: Springfield
+    fmt.Println("State:", homer.State) // State: Oregon
+}</code></pre> 
+  <p>Since <code class="language-go">Address</code> is now an anonymous field within the <code class="language-go">Employee</code> struct, we can access the promoted fields <code class="language-go">City</code> and <code class="language-go">State</code> of the <code class="language-go">Address</code> struct directly, as if they were originally declared in the <code class="language-go">Employee</code> struct itself.</p> 
+  <h5>Struct tags</h5> 
+  <p>Go allows us to add <strong>struct tags</strong> to struct fields. In very simple terms, struct tags are annotations that appear after the type of a field in Go struct declaration.</p> 
+  <p>The most common use of struct tags is to control JavaScript Object Notation (JSON) encoding. To explain the implementation of struct tags in Go, we'll look at an example of formatting and encoding the following JSON response of some random user information:</p> 
+  <pre><code class="language-json">{
+  "userId": "123",
+  "isActive": true,
+  "lastLogin": "2021-12-08T11:27:32.834056-05:00",
+  "userType": 1
+}</code></pre> 
+  <p>Now let's take a look at the implementation of the struct tag syntax in the <code class="language-go">User</code> struct:</p> 
+  <pre><code class="language-go">type User struct {
+                        // this column has the struct tags
+    UserId    string    `json:"userId"`
+    IsActive  bool      `json:"isActive"`
+    LastLogin time.Time `json:"lastLogin"`
+    UserType  int       `json:"userType"`
+}</code></pre> 
+  <p>Since we are planning to encode a JSON response within the <code class="language-go">User</code> struct, we need to specify several things to the Go compiler. In particular, we need to indicate the following:</p> 
+  <ul> 
+   <li>struct tags must begin and end with backticks <code class="language-go">`</code>;</li> 
+   <li>they require the <code class="language-go">json</code> prefix as the struct tag key, followed by the <code class="language-go">:</code> colon symbol;</li> 
+   <li>struct tags need the JSON key within the <code class="language-go">""</code> double quotes as the struct tag value.</li> 
+  </ul> 
+  <p></p>
+  <div class="alert alert-primary">
+   When working with struct tags, the struct tag
+   <em> </em>key before the 
+   <code class="language-go">:</code> colon symbol usually denotes the encoding package that the subsequent 
+   <code class="language-go">"value"</code> within the double quotes is for. In this particular example, it would be for JSON keys that should be processed by the 
+   <code class="language-go">encoding/json</code> or other third-party packages.
+  </div>
+  <p></p> 
+  <p>Take notice that apart from JSON struct tags, there are many other <a target="_blank" href="https://stackoverflow.com/questions/10858787/what-are-the-uses-for-tags-in-go" rel="noopener noreferrer nofollow">commonly used struct tag<em> </em>keys!</a></p> 
+  <h5>Summary</h5> 
+  <p>In this topic, we've learned how to deal with structs at an advanced level. We've covered the following questions:</p> 
+  <ul> 
+   <li>How to create anonymous structs and what they are commonly used for.</li> 
+   <li>How to create a nested struct and how to initialize and access the data within the nested struct fields.</li> 
+   <li>What anonymous fields are and how we can only have one anonymous field per data type in a struct.</li> 
+   <li>What promoted fields are and how we can access them directly.</li> 
+   <li>How to add struct tags to each of the struct fields, and that we implement struct tags mostly to control JSON encoding in Go.</li> 
+  </ul> 
+  <p>Now, to make sure you remember all this information and can implement it, let's answer a couple of questions and do some exercises. Good job!</p>
+ </body>
+</html>
